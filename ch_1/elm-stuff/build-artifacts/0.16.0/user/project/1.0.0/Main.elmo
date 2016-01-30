@@ -1,0 +1,48 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Mouse = Elm.Mouse.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $Window = Elm.Window.make(_elm);
+   var _op = {};
+   var view = function (_p0) {
+      var _p1 = _p0;
+      return A4($Graphics$Element.container,
+      _p1._0,
+      _p1._1,
+      $Graphics$Element.middle,
+      A2($Graphics$Element.color,
+      $Color.red,
+      $Graphics$Element.leftAligned(A2($Text.color,
+      $Color.white,
+      $Text.fromString(_p1._2)))));
+   };
+   var whichPart = F2(function (_p3,_p2) {
+      var _p4 = _p3;
+      var _p7 = _p4._0;
+      var _p6 = _p4._1;
+      var _p5 = _p2;
+      return _U.cmp(_p5._0,_p7 / 2 | 0) < 0 ? {ctor: "_Tuple3"
+                                              ,_0: _p7
+                                              ,_1: _p6
+                                              ,_2: "Left"} : {ctor: "_Tuple3",_0: _p7,_1: _p6,_2: "Right"};
+   });
+   var main = A2($Signal.map,
+   view,
+   A3($Signal.map2,whichPart,$Window.dimensions,$Mouse.position));
+   return _elm.Main.values = {_op: _op
+                             ,whichPart: whichPart
+                             ,main: main
+                             ,view: view};
+};
