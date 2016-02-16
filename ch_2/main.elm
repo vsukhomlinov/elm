@@ -19,11 +19,11 @@ view : (Int, Int) -> Model -> Svg
 view (w, h) bubbles =
   svg [width (toString w), height (toString h), viewBox (join " " ["0", "0", toString w, toString h])]
     ((radialGradient [id "light", cx "40%", cy "40%", r "50%", fx "30%", fy "30%"] [
-        stop [offset "5%", stopColor "rgba(120,150,255,255)"] [],
-        stop [offset "35%", stopColor "rgba(60,70,255,255)"] [],
-        stop [offset "75%", stopColor "rgba(20,25,255,255)"] [],
-        stop [offset "99%", stopColor "rgba(20,25,220,255)"] [],
-        stop [offset "100%", stopColor "rgba(20,25,230,200)"] []
+        stop [offset "5%", stopColor "rgba(120,150,255,30)"] [],
+        stop [offset "35%", stopColor "rgba(60,70,255,30)"] [],
+        stop [offset "75%", stopColor "rgba(20,25,255,30)"] [],
+        stop [offset "99%", stopColor "rgba(20,25,220,30)"] [],
+        stop [offset "100%", stopColor "rgba(20,25,230,15)"] []
     ]) :: (List.map Bubble.view bubbles))
 
 

@@ -1,4 +1,4 @@
-# elmChallenges
+#[Elm Challenges](https://github.com/pdamoc/elmChallenges)
 
 This is a learning project that provides some interesting challenges for the Elm programming language, intended to be completed after reading the [Elm Architecture Turorial](https://github.com/evancz/elm-architecture-tutorial/).
 
