@@ -1,20 +1,16 @@
-module Snake (Model, init, update, view) where
+module Snake (Model, init, update, view, head, grow, collides) where
 
 import Direction exposing (Direction)
 import List exposing (repeat, indexedMap, head, reverse)
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
+import Svg exposing (Svg, g)
+import Utils exposing (rect)
 
 
 type alias Point = (Int,Int)
 type alias Model = {cells: List Point, dir:Direction}
 
-rectWidth = 20
-rectHeight = 20
-
-
 init: Point -> Int -> Model
-init head length = Model (indexedMap (\ i (x,y) -> (x-i, y)) (repeat length head)) Direction.E
+init head' length = Model (indexedMap (\ i (x,y) -> (x-i, y)) (repeat length head')) Direction.E
 
 update: Maybe Direction -> Model -> Model
 update dir model =
@@ -23,7 +19,7 @@ update dir model =
             case dir of
                 Nothing -> model.dir
                 Just dir -> changeDirection model.dir dir
-        head' = newHead (Maybe.withDefault (0,0) (head model.cells)) newDir
+        head' = newHead (Maybe.withDefault (0,0) (List.head model.cells)) newDir
     in
         {model | dir=newDir , cells = List.append [head'] (cutOne model.cells)}
 
@@ -57,9 +53,28 @@ cutOne list=
 
 view: Model -> Svg
 view model =
-    g [] (List.map (\(x',y') -> rect [
-        x (toString ((*) x' rectWidth)),
-        y (toString ((*) y' rectHeight)),
-        width (toString rectWidth),
-        height (toString rectHeight)
-    ] []) model.cells)
+    g [] (List.map rect model.cells)
+
+head: Model -> (Int,Int)
+head {cells} =
+    let
+        h = List.head cells
+    in case h of
+        Nothing -> (0,0)
+        Just p -> p
+
+grow: Model -> Model
+grow model =
+    let
+        cells = reverse model.cells
+        tail = Maybe.withDefault (0,0) (List.head cells)
+    in
+        {model | cells = List.append model.cells [tail]}
+
+collides: Model -> Bool
+collides model =
+    let
+        head' = head model
+        tail' = Maybe.withDefault [] (List.tail model.cells)
+    in
+        List.member head' tail'

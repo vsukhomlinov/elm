@@ -11498,6 +11498,436 @@ Elm.Html.make = function (_elm) {
                              ,summary: summary
                              ,menuitem: menuitem
                              ,menu: menu};
+};Elm.Html = Elm.Html || {};
+Elm.Html.Attributes = Elm.Html.Attributes || {};
+Elm.Html.Attributes.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Attributes = _elm.Html.Attributes || {};
+   if (_elm.Html.Attributes.values)
+   return _elm.Html.Attributes.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var attribute = $VirtualDom.attribute;
+   var contextmenu = function (value) {
+      return A2(attribute,"contextmenu",value);
+   };
+   var property = $VirtualDom.property;
+   var stringProperty = F2(function (name,string) {
+      return A2(property,name,$Json$Encode.string(string));
+   });
+   var $class = function (name) {
+      return A2(stringProperty,"className",name);
+   };
+   var id = function (name) {
+      return A2(stringProperty,"id",name);
+   };
+   var title = function (name) {
+      return A2(stringProperty,"title",name);
+   };
+   var accesskey = function ($char) {
+      return A2(stringProperty,
+      "accessKey",
+      $String.fromChar($char));
+   };
+   var dir = function (value) {
+      return A2(stringProperty,"dir",value);
+   };
+   var draggable = function (value) {
+      return A2(stringProperty,"draggable",value);
+   };
+   var dropzone = function (value) {
+      return A2(stringProperty,"dropzone",value);
+   };
+   var itemprop = function (value) {
+      return A2(stringProperty,"itemprop",value);
+   };
+   var lang = function (value) {
+      return A2(stringProperty,"lang",value);
+   };
+   var tabindex = function (n) {
+      return A2(stringProperty,"tabIndex",$Basics.toString(n));
+   };
+   var charset = function (value) {
+      return A2(stringProperty,"charset",value);
+   };
+   var content = function (value) {
+      return A2(stringProperty,"content",value);
+   };
+   var httpEquiv = function (value) {
+      return A2(stringProperty,"httpEquiv",value);
+   };
+   var language = function (value) {
+      return A2(stringProperty,"language",value);
+   };
+   var src = function (value) {
+      return A2(stringProperty,"src",value);
+   };
+   var height = function (value) {
+      return A2(stringProperty,"height",$Basics.toString(value));
+   };
+   var width = function (value) {
+      return A2(stringProperty,"width",$Basics.toString(value));
+   };
+   var alt = function (value) {
+      return A2(stringProperty,"alt",value);
+   };
+   var preload = function (value) {
+      return A2(stringProperty,"preload",value);
+   };
+   var poster = function (value) {
+      return A2(stringProperty,"poster",value);
+   };
+   var kind = function (value) {
+      return A2(stringProperty,"kind",value);
+   };
+   var srclang = function (value) {
+      return A2(stringProperty,"srclang",value);
+   };
+   var sandbox = function (value) {
+      return A2(stringProperty,"sandbox",value);
+   };
+   var srcdoc = function (value) {
+      return A2(stringProperty,"srcdoc",value);
+   };
+   var type$ = function (value) {
+      return A2(stringProperty,"type",value);
+   };
+   var value = function (value) {
+      return A2(stringProperty,"value",value);
+   };
+   var placeholder = function (value) {
+      return A2(stringProperty,"placeholder",value);
+   };
+   var accept = function (value) {
+      return A2(stringProperty,"accept",value);
+   };
+   var acceptCharset = function (value) {
+      return A2(stringProperty,"acceptCharset",value);
+   };
+   var action = function (value) {
+      return A2(stringProperty,"action",value);
+   };
+   var autocomplete = function (bool) {
+      return A2(stringProperty,"autocomplete",bool ? "on" : "off");
+   };
+   var autosave = function (value) {
+      return A2(stringProperty,"autosave",value);
+   };
+   var enctype = function (value) {
+      return A2(stringProperty,"enctype",value);
+   };
+   var formaction = function (value) {
+      return A2(stringProperty,"formAction",value);
+   };
+   var list = function (value) {
+      return A2(stringProperty,"list",value);
+   };
+   var minlength = function (n) {
+      return A2(stringProperty,"minLength",$Basics.toString(n));
+   };
+   var maxlength = function (n) {
+      return A2(stringProperty,"maxLength",$Basics.toString(n));
+   };
+   var method = function (value) {
+      return A2(stringProperty,"method",value);
+   };
+   var name = function (value) {
+      return A2(stringProperty,"name",value);
+   };
+   var pattern = function (value) {
+      return A2(stringProperty,"pattern",value);
+   };
+   var size = function (n) {
+      return A2(stringProperty,"size",$Basics.toString(n));
+   };
+   var $for = function (value) {
+      return A2(stringProperty,"htmlFor",value);
+   };
+   var form = function (value) {
+      return A2(stringProperty,"form",value);
+   };
+   var max = function (value) {
+      return A2(stringProperty,"max",value);
+   };
+   var min = function (value) {
+      return A2(stringProperty,"min",value);
+   };
+   var step = function (n) {
+      return A2(stringProperty,"step",n);
+   };
+   var cols = function (n) {
+      return A2(stringProperty,"cols",$Basics.toString(n));
+   };
+   var rows = function (n) {
+      return A2(stringProperty,"rows",$Basics.toString(n));
+   };
+   var wrap = function (value) {
+      return A2(stringProperty,"wrap",value);
+   };
+   var usemap = function (value) {
+      return A2(stringProperty,"useMap",value);
+   };
+   var shape = function (value) {
+      return A2(stringProperty,"shape",value);
+   };
+   var coords = function (value) {
+      return A2(stringProperty,"coords",value);
+   };
+   var challenge = function (value) {
+      return A2(stringProperty,"challenge",value);
+   };
+   var keytype = function (value) {
+      return A2(stringProperty,"keytype",value);
+   };
+   var align = function (value) {
+      return A2(stringProperty,"align",value);
+   };
+   var cite = function (value) {
+      return A2(stringProperty,"cite",value);
+   };
+   var href = function (value) {
+      return A2(stringProperty,"href",value);
+   };
+   var target = function (value) {
+      return A2(stringProperty,"target",value);
+   };
+   var downloadAs = function (value) {
+      return A2(stringProperty,"download",value);
+   };
+   var hreflang = function (value) {
+      return A2(stringProperty,"hreflang",value);
+   };
+   var media = function (value) {
+      return A2(stringProperty,"media",value);
+   };
+   var ping = function (value) {
+      return A2(stringProperty,"ping",value);
+   };
+   var rel = function (value) {
+      return A2(stringProperty,"rel",value);
+   };
+   var datetime = function (value) {
+      return A2(stringProperty,"datetime",value);
+   };
+   var pubdate = function (value) {
+      return A2(stringProperty,"pubdate",value);
+   };
+   var start = function (n) {
+      return A2(stringProperty,"start",$Basics.toString(n));
+   };
+   var colspan = function (n) {
+      return A2(stringProperty,"colSpan",$Basics.toString(n));
+   };
+   var headers = function (value) {
+      return A2(stringProperty,"headers",value);
+   };
+   var rowspan = function (n) {
+      return A2(stringProperty,"rowSpan",$Basics.toString(n));
+   };
+   var scope = function (value) {
+      return A2(stringProperty,"scope",value);
+   };
+   var manifest = function (value) {
+      return A2(stringProperty,"manifest",value);
+   };
+   var boolProperty = F2(function (name,bool) {
+      return A2(property,name,$Json$Encode.bool(bool));
+   });
+   var hidden = function (bool) {
+      return A2(boolProperty,"hidden",bool);
+   };
+   var contenteditable = function (bool) {
+      return A2(boolProperty,"contentEditable",bool);
+   };
+   var spellcheck = function (bool) {
+      return A2(boolProperty,"spellcheck",bool);
+   };
+   var async = function (bool) {
+      return A2(boolProperty,"async",bool);
+   };
+   var defer = function (bool) {
+      return A2(boolProperty,"defer",bool);
+   };
+   var scoped = function (bool) {
+      return A2(boolProperty,"scoped",bool);
+   };
+   var autoplay = function (bool) {
+      return A2(boolProperty,"autoplay",bool);
+   };
+   var controls = function (bool) {
+      return A2(boolProperty,"controls",bool);
+   };
+   var loop = function (bool) {
+      return A2(boolProperty,"loop",bool);
+   };
+   var $default = function (bool) {
+      return A2(boolProperty,"default",bool);
+   };
+   var seamless = function (bool) {
+      return A2(boolProperty,"seamless",bool);
+   };
+   var checked = function (bool) {
+      return A2(boolProperty,"checked",bool);
+   };
+   var selected = function (bool) {
+      return A2(boolProperty,"selected",bool);
+   };
+   var autofocus = function (bool) {
+      return A2(boolProperty,"autofocus",bool);
+   };
+   var disabled = function (bool) {
+      return A2(boolProperty,"disabled",bool);
+   };
+   var multiple = function (bool) {
+      return A2(boolProperty,"multiple",bool);
+   };
+   var novalidate = function (bool) {
+      return A2(boolProperty,"noValidate",bool);
+   };
+   var readonly = function (bool) {
+      return A2(boolProperty,"readOnly",bool);
+   };
+   var required = function (bool) {
+      return A2(boolProperty,"required",bool);
+   };
+   var ismap = function (value) {
+      return A2(boolProperty,"isMap",value);
+   };
+   var download = function (bool) {
+      return A2(boolProperty,"download",bool);
+   };
+   var reversed = function (bool) {
+      return A2(boolProperty,"reversed",bool);
+   };
+   var classList = function (list) {
+      return $class(A2($String.join,
+      " ",
+      A2($List.map,$Basics.fst,A2($List.filter,$Basics.snd,list))));
+   };
+   var style = function (props) {
+      return A2(property,
+      "style",
+      $Json$Encode.object(A2($List.map,
+      function (_p0) {
+         var _p1 = _p0;
+         return {ctor: "_Tuple2"
+                ,_0: _p1._0
+                ,_1: $Json$Encode.string(_p1._1)};
+      },
+      props)));
+   };
+   var key = function (k) {    return A2(stringProperty,"key",k);};
+   return _elm.Html.Attributes.values = {_op: _op
+                                        ,key: key
+                                        ,style: style
+                                        ,$class: $class
+                                        ,classList: classList
+                                        ,id: id
+                                        ,title: title
+                                        ,hidden: hidden
+                                        ,type$: type$
+                                        ,value: value
+                                        ,checked: checked
+                                        ,placeholder: placeholder
+                                        ,selected: selected
+                                        ,accept: accept
+                                        ,acceptCharset: acceptCharset
+                                        ,action: action
+                                        ,autocomplete: autocomplete
+                                        ,autofocus: autofocus
+                                        ,autosave: autosave
+                                        ,disabled: disabled
+                                        ,enctype: enctype
+                                        ,formaction: formaction
+                                        ,list: list
+                                        ,maxlength: maxlength
+                                        ,minlength: minlength
+                                        ,method: method
+                                        ,multiple: multiple
+                                        ,name: name
+                                        ,novalidate: novalidate
+                                        ,pattern: pattern
+                                        ,readonly: readonly
+                                        ,required: required
+                                        ,size: size
+                                        ,$for: $for
+                                        ,form: form
+                                        ,max: max
+                                        ,min: min
+                                        ,step: step
+                                        ,cols: cols
+                                        ,rows: rows
+                                        ,wrap: wrap
+                                        ,href: href
+                                        ,target: target
+                                        ,download: download
+                                        ,downloadAs: downloadAs
+                                        ,hreflang: hreflang
+                                        ,media: media
+                                        ,ping: ping
+                                        ,rel: rel
+                                        ,ismap: ismap
+                                        ,usemap: usemap
+                                        ,shape: shape
+                                        ,coords: coords
+                                        ,src: src
+                                        ,height: height
+                                        ,width: width
+                                        ,alt: alt
+                                        ,autoplay: autoplay
+                                        ,controls: controls
+                                        ,loop: loop
+                                        ,preload: preload
+                                        ,poster: poster
+                                        ,$default: $default
+                                        ,kind: kind
+                                        ,srclang: srclang
+                                        ,sandbox: sandbox
+                                        ,seamless: seamless
+                                        ,srcdoc: srcdoc
+                                        ,reversed: reversed
+                                        ,start: start
+                                        ,align: align
+                                        ,colspan: colspan
+                                        ,rowspan: rowspan
+                                        ,headers: headers
+                                        ,scope: scope
+                                        ,async: async
+                                        ,charset: charset
+                                        ,content: content
+                                        ,defer: defer
+                                        ,httpEquiv: httpEquiv
+                                        ,language: language
+                                        ,scoped: scoped
+                                        ,accesskey: accesskey
+                                        ,contenteditable: contenteditable
+                                        ,contextmenu: contextmenu
+                                        ,dir: dir
+                                        ,draggable: draggable
+                                        ,dropzone: dropzone
+                                        ,itemprop: itemprop
+                                        ,lang: lang
+                                        ,spellcheck: spellcheck
+                                        ,tabindex: tabindex
+                                        ,challenge: challenge
+                                        ,keytype: keytype
+                                        ,cite: cite
+                                        ,datetime: datetime
+                                        ,pubdate: pubdate
+                                        ,manifest: manifest
+                                        ,property: property
+                                        ,attribute: attribute};
 };Elm.Svg = Elm.Svg || {};
 Elm.Svg.make = function (_elm) {
    "use strict";
@@ -12250,6 +12680,45 @@ Elm.Direction.make = function (_elm) {
    var S = {ctor: "S"};
    var N = {ctor: "N"};
    return _elm.Direction.values = {_op: _op,N: N,S: S,W: W,E: E};
+};Elm.Utils = Elm.Utils || {};
+Elm.Utils.make = function (_elm) {
+   "use strict";
+   _elm.Utils = _elm.Utils || {};
+   if (_elm.Utils.values) return _elm.Utils.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var height = 20;
+   var width = 20;
+   var rect = function (_p0) {
+      var _p1 = _p0;
+      return A2($Svg.rect,
+      _U.list([$Svg$Attributes.x($Basics.toString(A2(F2(function (x,
+              y) {
+                 return x * y;
+              }),
+              _p1._0,
+              width)))
+              ,$Svg$Attributes.y($Basics.toString(A2(F2(function (x,y) {
+                 return x * y;
+              }),
+              _p1._1,
+              height)))
+              ,$Svg$Attributes.width($Basics.toString(width))
+              ,$Svg$Attributes.height($Basics.toString(height))]),
+      _U.list([]));
+   };
+   return _elm.Utils.values = {_op: _op
+                              ,rect: rect
+                              ,width: width
+                              ,height: height};
 };Elm.Snake = Elm.Snake || {};
 Elm.Snake.make = function (_elm) {
    "use strict";
@@ -12264,21 +12733,51 @@ Elm.Snake.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   $Utils = Elm.Utils.make(_elm);
    var _op = {};
+   var grow = function (model) {
+      var cells = $List.reverse(model.cells);
+      var tail = A2($Maybe.withDefault,
+      {ctor: "_Tuple2",_0: 0,_1: 0},
+      $List.head(cells));
+      return _U.update(model,
+      {cells: A2($List.append,model.cells,_U.list([tail]))});
+   };
+   var head = function (_p0) {
+      var _p1 = _p0;
+      var h = $List.head(_p1.cells);
+      var _p2 = h;
+      if (_p2.ctor === "Nothing") {
+            return {ctor: "_Tuple2",_0: 0,_1: 0};
+         } else {
+            return _p2._0;
+         }
+   };
+   var collides = function (model) {
+      var tail$ = A2($Maybe.withDefault,
+      _U.list([]),
+      $List.tail(model.cells));
+      var head$ = head(model);
+      return A2($List.member,head$,tail$);
+   };
+   var view = function (model) {
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,$Utils.rect,model.cells));
+   };
    var cutOne = function (list) {
       return $List.reverse(A2($List.drop,1,$List.reverse(list)));
    };
-   var newHead = F2(function (_p0,dir) {
-      var _p1 = _p0;
-      var _p4 = _p1._1;
-      var _p3 = _p1._0;
-      var _p2 = dir;
-      switch (_p2.ctor)
-      {case "N": return {ctor: "_Tuple2",_0: _p3,_1: _p4 - 1};
-         case "S": return {ctor: "_Tuple2",_0: _p3,_1: _p4 + 1};
-         case "W": return {ctor: "_Tuple2",_0: _p3 - 1,_1: _p4};
-         default: return {ctor: "_Tuple2",_0: _p3 + 1,_1: _p4};}
+   var newHead = F2(function (_p3,dir) {
+      var _p4 = _p3;
+      var _p7 = _p4._1;
+      var _p6 = _p4._0;
+      var _p5 = dir;
+      switch (_p5.ctor)
+      {case "N": return {ctor: "_Tuple2",_0: _p6,_1: _p7 - 1};
+         case "S": return {ctor: "_Tuple2",_0: _p6,_1: _p7 + 1};
+         case "W": return {ctor: "_Tuple2",_0: _p6 - 1,_1: _p7};
+         default: return {ctor: "_Tuple2",_0: _p6 + 1,_1: _p7};}
    });
    var changeDirection = F2(function (from,to) {
       return _U.eq(from,$Direction.N) && _U.eq(to,
@@ -12289,11 +12788,11 @@ Elm.Snake.make = function (_elm) {
    });
    var update = F2(function (dir,model) {
       var newDir = function () {
-         var _p5 = dir;
-         if (_p5.ctor === "Nothing") {
+         var _p8 = dir;
+         if (_p8.ctor === "Nothing") {
                return model.dir;
             } else {
-               return A2(changeDirection,model.dir,_p5._0);
+               return A2(changeDirection,model.dir,_p8._0);
             }
       }();
       var head$ = A2(newHead,
@@ -12305,47 +12804,24 @@ Elm.Snake.make = function (_elm) {
       {dir: newDir
       ,cells: A2($List.append,_U.list([head$]),cutOne(model.cells))});
    });
-   var rectHeight = 20;
-   var rectWidth = 20;
-   var view = function (model) {
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,
-      function (_p6) {
-         var _p7 = _p6;
-         return A2($Svg.rect,
-         _U.list([$Svg$Attributes.x($Basics.toString(A2(F2(function (x,
-                 y) {
-                    return x * y;
-                 }),
-                 _p7._0,
-                 rectWidth)))
-                 ,$Svg$Attributes.y($Basics.toString(A2(F2(function (x,y) {
-                    return x * y;
-                 }),
-                 _p7._1,
-                 rectHeight)))
-                 ,$Svg$Attributes.width($Basics.toString(rectWidth))
-                 ,$Svg$Attributes.height($Basics.toString(rectHeight))]),
-         _U.list([]));
-      },
-      model.cells));
-   };
    var Model = F2(function (a,b) {    return {cells: a,dir: b};});
-   var init = F2(function (head,length) {
+   var init = F2(function (head$,length) {
       return A2(Model,
       A2($List.indexedMap,
-      F2(function (i,_p8) {
-         var _p9 = _p8;
-         return {ctor: "_Tuple2",_0: _p9._0 - i,_1: _p9._1};
+      F2(function (i,_p9) {
+         var _p10 = _p9;
+         return {ctor: "_Tuple2",_0: _p10._0 - i,_1: _p10._1};
       }),
-      A2($List.repeat,length,head)),
+      A2($List.repeat,length,head$)),
       $Direction.E);
    });
    return _elm.Snake.values = {_op: _op
                               ,init: init
                               ,update: update
                               ,view: view
+                              ,head: head
+                              ,grow: grow
+                              ,collides: collides
                               ,Model: Model};
 };Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
@@ -12353,10 +12829,12 @@ Elm.Main.make = function (_elm) {
    _elm.Main = _elm.Main || {};
    if (_elm.Main.values) return _elm.Main.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Direction = Elm.Direction.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -12367,8 +12845,31 @@ Elm.Main.make = function (_elm) {
    $String = Elm.String.make(_elm),
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Time = Elm.Time.make(_elm),
+   $Utils = Elm.Utils.make(_elm);
    var _op = {};
+   var notMember = F2(function (list,el) {
+      return $Basics.not(A2($List.member,el,list));
+   });
+   var freeCells = function (game) {
+      var snakeCells = game.snake.cells;
+      var maxX = A2(F2(function (x,y) {    return x - y;}),
+      game.width,
+      1);
+      var maxY = A2(F2(function (x,y) {    return x - y;}),
+      game.height,
+      1);
+      var allCells = $List.concat(A2($List.map,
+      function (a) {
+         return A2($List.map,
+         function (b) {
+            return {ctor: "_Tuple2",_0: a,_1: b};
+         },
+         _U.range(0,maxX));
+      },
+      _U.range(0,maxY)));
+      return A2($List.filter,notMember(snakeCells),allCells);
+   };
    var direction = function (_p0) {
       var _p1 = _p0;
       var _p3 = _p1.y;
@@ -12380,52 +12881,112 @@ Elm.Main.make = function (_elm) {
    };
    var input = A2($Signal.map,
    direction,
-   A2($Signal.sampleOn,
-   $Time.every($Time.second),
-   $Keyboard.arrows));
-   var update = F2(function (dir,game) {
-      var newSnake = A2($Snake.update,dir,game.snake);
-      return _U.update(game,{snake: newSnake});
-   });
-   var snake = A2($Snake.init,{ctor: "_Tuple2",_0: 3,_1: 5},3);
-   var rectHeight = 20;
-   var rectWidth = 20;
+   A2($Signal.sampleOn,$Time.every(100),$Keyboard.arrows));
    var view = function (game) {
+      var textStyle = game.started ? _U.list([{ctor: "_Tuple2"
+                                              ,_0: "display"
+                                              ,_1: "none"}]) : _U.list([{ctor: "_Tuple2",_0: "left",_1: "50%"}
+                                                                       ,{ctor: "_Tuple2",_0: "top",_1: "50%"}
+                                                                       ,{ctor: "_Tuple2",_0: "position",_1: "absolute"}]);
       var pixelHeight = $Basics.toString(A2(F2(function (x,y) {
          return x * y;
       }),
       game.height,
-      rectHeight));
+      $Utils.height));
       var pixelWidth = $Basics.toString(A2(F2(function (x,y) {
          return x * y;
       }),
       game.width,
-      rectWidth));
-      return A2($Svg.svg,
-      _U.list([$Svg$Attributes.width(pixelWidth)
-              ,$Svg$Attributes.height(pixelHeight)
-              ,$Svg$Attributes.viewBox($String.concat(_U.list(["0 0 "
-                                                              ,pixelWidth
-                                                              ," "
-                                                              ,pixelHeight])))]),
-      _U.list([$Snake.view(game.snake)]));
+      $Utils.width));
+      return A2($Html.div,
+      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                               ,_0: "border"
+                                               ,_1: "2px solid black"}
+                                              ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}
+                                              ,{ctor: "_Tuple2",_0: "position",_1: "relative"}]))]),
+      _U.list([A2($Html.span,
+              _U.list([$Html$Attributes.style(textStyle)]),
+              _U.list([$Html.text("GAME OVER")]))
+              ,A2($Svg.svg,
+              _U.list([$Svg$Attributes.width(pixelWidth)
+                      ,$Svg$Attributes.height(pixelHeight)
+                      ,$Svg$Attributes.viewBox($String.concat(_U.list(["0 0 "
+                                                                      ,pixelWidth
+                                                                      ," "
+                                                                      ,pixelHeight])))]),
+              _U.list([$Snake.view(game.snake)
+                      ,$Utils.rect(game.food.point)]))]));
    };
-   var Food = F3(function (a,b,c) {
-      return {x: a,y: b,seed: c};
+   var snake = A2($Snake.init,{ctor: "_Tuple2",_0: 3,_1: 5},3);
+   var boardHeight = 30;
+   var boardWidth = 30;
+   var boardPoints = A3($List.map2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   _U.range(0,boardWidth),
+   _U.range(0,boardHeight));
+   var Food = F2(function (a,b) {    return {point: a,seed: b};});
+   var food = A2(Food,
+   {ctor: "_Tuple2",_0: 2,_1: 9},
+   $Random.initialSeed(3332));
+   var updateFood = F2(function (_p4,points) {
+      var _p5 = _p4;
+      var pointArray = $Array.fromList(points);
+      var _p6 = A2($Random.generate,
+      A2($Random.$int,0,$Array.length(pointArray)),
+      _p5.seed);
+      var randomIndex = _p6._0;
+      var newSeed = _p6._1;
+      var newPoint = A2($Maybe.withDefault,
+      {ctor: "_Tuple2",_0: 0,_1: 0},
+      A2($Array.get,randomIndex,pointArray));
+      return A2(Food,newPoint,newSeed);
    });
-   var food = A3(Food,2,9,$Random.initialSeed(3332));
-   var Game = F5(function (a,b,c,d,e) {
-      return {snake: a,food: b,dir: c,width: d,height: e};
+   var update = F2(function (dir,game) {
+      if (game.started) {
+            var _p7 = game.food.point;
+            var fx = _p7._0;
+            var fy = _p7._1;
+            var newSnake = A2($Snake.update,dir,game.snake);
+            var _p8 = $Snake.head(newSnake);
+            var x = _p8._0;
+            var y = _p8._1;
+            if (_U.cmp(x,0) < 0 || (_U.cmp(y,0) < 0 || (_U.cmp(x,
+            game.width) > -1 || (_U.cmp(y,
+            game.height) > -1 || $Snake.collides(newSnake)))))
+            return _U.update(game,{started: false}); else if (_U.eq(x,
+               fx) && _U.eq(y,fy)) {
+                     var food = A2(updateFood,game.food,freeCells(game));
+                     return _U.update(game,
+                     {snake: $Snake.grow(newSnake),food: food});
+                  } else return _U.update(game,{snake: newSnake});
+         } else return game;
    });
-   var game = A5(Game,snake,food,$Direction.E,10,10);
+   var Game = F6(function (a,b,c,d,e,f) {
+      return {snake: a
+             ,food: b
+             ,dir: c
+             ,width: d
+             ,height: e
+             ,started: f};
+   });
+   var game = A6(Game,
+   snake,
+   food,
+   $Direction.E,
+   boardWidth,
+   boardHeight,
+   true);
    var main = A2($Signal.map,
    view,
    A3($Signal.foldp,update,game,input));
    return _elm.Main.values = {_op: _op
                              ,Game: Game
                              ,Food: Food
-                             ,rectWidth: rectWidth
-                             ,rectHeight: rectHeight
+                             ,boardWidth: boardWidth
+                             ,boardHeight: boardHeight
+                             ,boardPoints: boardPoints
                              ,snake: snake
                              ,food: food
                              ,game: game
@@ -12433,5 +12994,8 @@ Elm.Main.make = function (_elm) {
                              ,update: update
                              ,view: view
                              ,input: input
-                             ,direction: direction};
+                             ,direction: direction
+                             ,freeCells: freeCells
+                             ,notMember: notMember
+                             ,updateFood: updateFood};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>
