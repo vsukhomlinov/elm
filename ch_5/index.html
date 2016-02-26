@@ -11928,6 +11928,93 @@ Elm.Html.Attributes.make = function (_elm) {
                                         ,manifest: manifest
                                         ,property: property
                                         ,attribute: attribute};
+};Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values) return _elm.Html.Events.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var keyCode = A2($Json$Decode._op[":="],
+   "keyCode",
+   $Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,
+   _U.list(["target","checked"]),
+   $Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,
+   _U.list(["target","value"]),
+   $Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,b) {
+      return {stopPropagation: a,preventDefault: b};
+   });
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,addr,msg) {
+      return A3(on,
+      name,
+      $Json$Decode.value,
+      function (_p0) {
+         return A2($Signal.message,addr,msg);
+      });
+   });
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,addr,handler) {
+      return A3(on,
+      name,
+      keyCode,
+      function (code) {
+         return A2($Signal.message,addr,handler(code));
+      });
+   });
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   return _elm.Html.Events.values = {_op: _op
+                                    ,onBlur: onBlur
+                                    ,onFocus: onFocus
+                                    ,onSubmit: onSubmit
+                                    ,onKeyUp: onKeyUp
+                                    ,onKeyDown: onKeyDown
+                                    ,onKeyPress: onKeyPress
+                                    ,onClick: onClick
+                                    ,onDoubleClick: onDoubleClick
+                                    ,onMouseMove: onMouseMove
+                                    ,onMouseDown: onMouseDown
+                                    ,onMouseUp: onMouseUp
+                                    ,onMouseEnter: onMouseEnter
+                                    ,onMouseLeave: onMouseLeave
+                                    ,onMouseOver: onMouseOver
+                                    ,onMouseOut: onMouseOut
+                                    ,on: on
+                                    ,onWithOptions: onWithOptions
+                                    ,defaultOptions: defaultOptions
+                                    ,targetValue: targetValue
+                                    ,targetChecked: targetChecked
+                                    ,keyCode: keyCode
+                                    ,Options: Options};
 };Elm.Svg = Elm.Svg || {};
 Elm.Svg.make = function (_elm) {
    "use strict";
@@ -12679,7 +12766,21 @@ Elm.Direction.make = function (_elm) {
    var W = {ctor: "W"};
    var S = {ctor: "S"};
    var N = {ctor: "N"};
-   return _elm.Direction.values = {_op: _op,N: N,S: S,W: W,E: E};
+   var fromArrowKey = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1.y;
+      var _p2 = _p1.x;
+      return _U.eq(_p2,-1) ? $Maybe.Just(W) : _U.eq(_p2,
+      1) ? $Maybe.Just(E) : _U.eq(_p3,
+      -1) ? $Maybe.Just(S) : _U.eq(_p3,
+      1) ? $Maybe.Just(N) : $Maybe.Nothing;
+   };
+   return _elm.Direction.values = {_op: _op
+                                  ,fromArrowKey: fromArrowKey
+                                  ,N: N
+                                  ,S: S
+                                  ,W: W
+                                  ,E: E};
 };Elm.Utils = Elm.Utils || {};
 Elm.Utils.make = function (_elm) {
    "use strict";
@@ -12823,114 +12924,33 @@ Elm.Snake.make = function (_elm) {
                               ,grow: grow
                               ,collides: collides
                               ,Model: Model};
-};Elm.Main = Elm.Main || {};
-Elm.Main.make = function (_elm) {
+};Elm.Food = Elm.Food || {};
+Elm.Food.make = function (_elm) {
    "use strict";
-   _elm.Main = _elm.Main || {};
-   if (_elm.Main.values) return _elm.Main.values;
+   _elm.Food = _elm.Food || {};
+   if (_elm.Food.values) return _elm.Food.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Direction = Elm.Direction.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Random = Elm.Random.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Snake = Elm.Snake.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
-   $Time = Elm.Time.make(_elm),
-   $Utils = Elm.Utils.make(_elm);
+   $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var notMember = F2(function (list,el) {
-      return $Basics.not(A2($List.member,el,list));
-   });
-   var freeCells = function (game) {
-      var snakeCells = game.snake.cells;
-      var maxX = A2(F2(function (x,y) {    return x - y;}),
-      game.width,
-      1);
-      var maxY = A2(F2(function (x,y) {    return x - y;}),
-      game.height,
-      1);
-      var allCells = $List.concat(A2($List.map,
-      function (a) {
-         return A2($List.map,
-         function (b) {
-            return {ctor: "_Tuple2",_0: a,_1: b};
-         },
-         _U.range(0,maxX));
-      },
-      _U.range(0,maxY)));
-      return A2($List.filter,notMember(snakeCells),allCells);
-   };
-   var direction = function (_p0) {
-      var _p1 = _p0;
-      var _p3 = _p1.y;
-      var _p2 = _p1.x;
-      return _U.eq(_p2,-1) ? $Maybe.Just($Direction.W) : _U.eq(_p2,
-      1) ? $Maybe.Just($Direction.E) : _U.eq(_p3,
-      -1) ? $Maybe.Just($Direction.S) : _U.eq(_p3,
-      1) ? $Maybe.Just($Direction.N) : $Maybe.Nothing;
-   };
-   var input = A2($Signal.map,
-   direction,
-   A2($Signal.sampleOn,$Time.every(100),$Keyboard.arrows));
-   var view = function (game) {
-      var textStyle = game.started ? _U.list([{ctor: "_Tuple2"
-                                              ,_0: "display"
-                                              ,_1: "none"}]) : _U.list([{ctor: "_Tuple2",_0: "left",_1: "50%"}
-                                                                       ,{ctor: "_Tuple2",_0: "top",_1: "50%"}
-                                                                       ,{ctor: "_Tuple2",_0: "position",_1: "absolute"}]);
-      var pixelHeight = $Basics.toString(A2(F2(function (x,y) {
-         return x * y;
-      }),
-      game.height,
-      $Utils.height));
-      var pixelWidth = $Basics.toString(A2(F2(function (x,y) {
-         return x * y;
-      }),
-      game.width,
-      $Utils.width));
-      return A2($Html.div,
-      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "border"
-                                               ,_1: "2px solid black"}
-                                              ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}
-                                              ,{ctor: "_Tuple2",_0: "position",_1: "relative"}]))]),
-      _U.list([A2($Html.span,
-              _U.list([$Html$Attributes.style(textStyle)]),
-              _U.list([$Html.text("GAME OVER")]))
-              ,A2($Svg.svg,
-              _U.list([$Svg$Attributes.width(pixelWidth)
-                      ,$Svg$Attributes.height(pixelHeight)
-                      ,$Svg$Attributes.viewBox($String.concat(_U.list(["0 0 "
-                                                                      ,pixelWidth
-                                                                      ," "
-                                                                      ,pixelHeight])))]),
-              _U.list([$Snake.view(game.snake)
-                      ,$Utils.rect(game.food.point)]))]));
-   };
-   var snake = A2($Snake.init,{ctor: "_Tuple2",_0: 3,_1: 5},3);
-   var boardHeight = 30;
-   var boardWidth = 30;
-   var boardPoints = A3($List.map2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   _U.range(0,boardWidth),
-   _U.range(0,boardHeight));
    var Food = F2(function (a,b) {    return {point: a,seed: b};});
-   var food = A2(Food,
-   {ctor: "_Tuple2",_0: 2,_1: 9},
-   $Random.initialSeed(3332));
-   var updateFood = F2(function (_p4,points) {
+   var init = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1._1;
+      var _p2 = _p1._0;
+      return A2(Food,
+      {ctor: "_Tuple2",_0: _p2,_1: _p3},
+      $Random.initialSeed(A2(F2(function (x,y) {    return x + y;}),
+      _p2,
+      _p3)));
+   };
+   var update = F2(function (_p4,points) {
       var _p5 = _p4;
       var pointArray = $Array.fromList(points);
       var _p6 = A2($Random.generate,
@@ -12943,59 +12963,243 @@ Elm.Main.make = function (_elm) {
       A2($Array.get,randomIndex,pointArray));
       return A2(Food,newPoint,newSeed);
    });
-   var update = F2(function (dir,game) {
-      if (game.started) {
-            var _p7 = game.food.point;
-            var fx = _p7._0;
-            var fy = _p7._1;
-            var newSnake = A2($Snake.update,dir,game.snake);
-            var _p8 = $Snake.head(newSnake);
-            var x = _p8._0;
-            var y = _p8._1;
-            if (_U.cmp(x,0) < 0 || (_U.cmp(y,0) < 0 || (_U.cmp(x,
-            game.width) > -1 || (_U.cmp(y,
-            game.height) > -1 || $Snake.collides(newSnake)))))
-            return _U.update(game,{started: false}); else if (_U.eq(x,
-               fx) && _U.eq(y,fy)) {
-                     var food = A2(updateFood,game.food,freeCells(game));
-                     return _U.update(game,
-                     {snake: $Snake.grow(newSnake),food: food});
-                  } else return _U.update(game,{snake: newSnake});
-         } else return game;
+   return _elm.Food.values = {_op: _op
+                             ,init: init
+                             ,update: update
+                             ,Food: Food};
+};Elm.Board = Elm.Board || {};
+Elm.Board.make = function (_elm) {
+   "use strict";
+   _elm.Board = _elm.Board || {};
+   if (_elm.Board.values) return _elm.Board.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Direction = Elm.Direction.make(_elm),
+   $Food = Elm.Food.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Snake = Elm.Snake.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Utils = Elm.Utils.make(_elm);
+   var _op = {};
+   var notMember = F2(function (list,el) {
+      return $Basics.not(A2($List.member,el,list));
    });
-   var Game = F6(function (a,b,c,d,e,f) {
-      return {snake: a
-             ,food: b
-             ,dir: c
-             ,width: d
-             ,height: e
-             ,started: f};
+   var freeCells = function (_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.size;
+      var snakeCells = _p1.snake.cells;
+      var maxX = A2(F2(function (x,y) {    return x - y;}),
+      $Basics.fst(_p2),
+      1);
+      var maxY = A2(F2(function (x,y) {    return x - y;}),
+      $Basics.snd(_p2),
+      1);
+      var allCells = $List.concat(A2($List.map,
+      function (a) {
+         return A2($List.map,
+         function (b) {
+            return {ctor: "_Tuple2",_0: a,_1: b};
+         },
+         _U.range(0,maxX));
+      },
+      _U.range(0,maxY)));
+      return A2($List.filter,notMember(snakeCells),allCells);
+   };
+   var update = F2(function (action,model) {
+      var _p3 = action;
+      switch (_p3.ctor)
+      {case "Step": if (model.started) {
+                 var _p4 = model.food.point;
+                 var fx = _p4._0;
+                 var fy = _p4._1;
+                 var newSnake = A2($Snake.update,_p3._0,model.snake);
+                 var _p5 = $Snake.head(newSnake);
+                 var x = _p5._0;
+                 var y = _p5._1;
+                 if (_U.cmp(x,0) < 0 || (_U.cmp(y,0) < 0 || (_U.cmp(x,
+                 $Basics.fst(model.size)) > -1 || (_U.cmp(y,
+                 $Basics.snd(model.size)) > -1 || $Snake.collides(newSnake)))))
+                 return _U.update(model,{started: false}); else if (_U.eq(x,
+                    fx) && _U.eq(y,fy)) {
+                          var food = A2($Food.update,model.food,freeCells(model));
+                          return _U.update(model,
+                          {snake: $Snake.grow(newSnake),food: food});
+                       } else return _U.update(model,{snake: newSnake});
+              } else return model;
+         case "Start": return _U.update(model,{started: true});
+         default: return model;}
    });
-   var game = A6(Game,
-   snake,
-   food,
-   $Direction.E,
-   boardWidth,
-   boardHeight,
-   true);
+   var view = function (game) {
+      var textStyle = game.started ? _U.list([{ctor: "_Tuple2"
+                                              ,_0: "display"
+                                              ,_1: "none"}]) : _U.list([{ctor: "_Tuple2",_0: "left",_1: "50%"}
+                                                                       ,{ctor: "_Tuple2",_0: "top",_1: "50%"}
+                                                                       ,{ctor: "_Tuple2",_0: "position",_1: "absolute"}]);
+      var pixelHeight = $Basics.toString(A2(F2(function (x,y) {
+         return x * y;
+      }),
+      $Basics.snd(game.size),
+      $Utils.height));
+      var pixelWidth = $Basics.toString(A2(F2(function (x,y) {
+         return x * y;
+      }),
+      $Basics.fst(game.size),
+      $Utils.width));
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                       ,_0: "border"
+                                                       ,_1: "2px solid black"}
+                                                      ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}
+                                                      ,{ctor: "_Tuple2",_0: "position",_1: "relative"}]))]),
+              _U.list([A2($Html.span,
+                      _U.list([$Html$Attributes.style(textStyle)]),
+                      _U.list([$Html.text("GAME OVER")]))
+                      ,A2($Svg.svg,
+                      _U.list([$Svg$Attributes.width(pixelWidth)
+                              ,$Svg$Attributes.height(pixelHeight)
+                              ,$Svg$Attributes.viewBox($String.concat(_U.list(["0 0 "
+                                                                              ,pixelWidth
+                                                                              ," "
+                                                                              ,pixelHeight])))]),
+                      _U.list([$Snake.view(game.snake)
+                              ,$Utils.rect(game.food.point)]))]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([$Html.text($Basics.toString(game))]))]));
+   };
+   var Stop = {ctor: "Stop"};
+   var mailbox = $Signal.mailbox(Stop);
+   var Start = {ctor: "Start"};
+   var Step = function (a) {    return {ctor: "Step",_0: a};};
+   var Board = F4(function (a,b,c,d) {
+      return {snake: a,food: b,size: c,started: d};
+   });
+   var $new = function () {
+      var food = $Food.init({ctor: "_Tuple2",_0: 2,_1: 7});
+      var snake = A2($Snake.init,{ctor: "_Tuple2",_0: 3,_1: 5},3);
+      return A4(Board,
+      snake,
+      food,
+      {ctor: "_Tuple2",_0: 30,_1: 30},
+      false);
+   }();
+   return _elm.Board.values = {_op: _op
+                              ,$new: $new
+                              ,view: view
+                              ,update: update
+                              ,Board: Board
+                              ,Step: Step
+                              ,Start: Start
+                              ,Stop: Stop};
+};Elm.Player = Elm.Player || {};
+Elm.Player.make = function (_elm) {
+   "use strict";
+   _elm.Player = _elm.Player || {};
+   if (_elm.Player.values) return _elm.Player.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var view = function (model) {
+      return $Html.text($Basics.toString(model));
+   };
+   var end = function (model) {    return model;};
+   var score = function (model) {
+      return _U.update(model,
+      {score: A2(F2(function (x,y) {    return x + y;}),
+      model.score,
+      1)});
+   };
+   var mailbox = $Signal.Mailbox;
+   var End = {ctor: "End"};
+   var Model = F2(function (a,b) {    return {name: a,score: b};});
+   var init = function (name) {    return A2(Model,name,0);};
+   return _elm.Player.values = {_op: _op
+                               ,init: init
+                               ,score: score
+                               ,end: end
+                               ,view: view
+                               ,Model: Model};
+};Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Board = Elm.Board.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Direction = Elm.Direction.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Keyboard = Elm.Keyboard.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var update = F2(function (event,game) {
+      var _p0 = event;
+      switch (_p0.ctor)
+      {case "Tick": return A2($Board.update,$Board.Step(_p0._0),game);
+         case "Start": return A2($Board.update,$Board.Start,game);
+         case "Blank": return $Board.$new;
+         default: return game;}
+   });
+   var Tick = function (a) {    return {ctor: "Tick",_0: a};};
+   var Blank = {ctor: "Blank"};
+   var gameMailbox = $Signal.mailbox(Blank);
+   var keyboard = Elm.Native.Task.make(_elm).performSignal("keyboard",
+   A2($Signal.map,
+   $Signal.send(gameMailbox.address),
+   A2($Signal.map,
+   Tick,
+   A2($Signal.map,
+   $Direction.fromArrowKey,
+   A2($Signal.sampleOn,$Time.every(100),$Keyboard.arrows)))));
+   var GameOver = function (a) {
+      return {ctor: "GameOver",_0: a};
+   };
+   var Score = function (a) {    return {ctor: "Score",_0: a};};
+   var Start = function (a) {    return {ctor: "Start",_0: a};};
+   var view = function (board) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([$Board.view(board)
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,
+              gameMailbox.address,
+              Start(""))]),
+              _U.list([$Html.text("Start")]))]));
+   };
    var main = A2($Signal.map,
    view,
-   A3($Signal.foldp,update,game,input));
+   A3($Signal.foldp,update,$Board.$new,gameMailbox.signal));
    return _elm.Main.values = {_op: _op
-                             ,Game: Game
-                             ,Food: Food
-                             ,boardWidth: boardWidth
-                             ,boardHeight: boardHeight
-                             ,boardPoints: boardPoints
-                             ,snake: snake
-                             ,food: food
-                             ,game: game
+                             ,Start: Start
+                             ,Score: Score
+                             ,GameOver: GameOver
+                             ,Blank: Blank
+                             ,Tick: Tick
+                             ,gameMailbox: gameMailbox
                              ,main: main
                              ,update: update
-                             ,view: view
-                             ,input: input
-                             ,direction: direction
-                             ,freeCells: freeCells
-                             ,notMember: notMember
-                             ,updateFood: updateFood};
+                             ,view: view};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>
