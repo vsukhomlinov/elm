@@ -1,22 +1,27 @@
-module Player(Model, init, score, end, view) where
+module Player(Player, init, score, end, view) where
 
-import Html exposing (Html)
+import Html exposing (Html, text, div)
+import String
 
-type alias Model = {name:String, score:Int}
+type alias Player = {name:String, score:Int}
 
 type Event = End
 
 mailbox = Signal.Mailbox
 
-init: String -> Model
-init name = Model name 0
+init: String -> Int -> Player
+init name score = Player name score
 
-score: Model -> Model
+score: Player -> Player
 score model = {model | score = (+) model.score 1}
 
-end: Model -> Model
+end: Player -> Player
 end model = model
 
-view: Model -> Html
-view model = Html.text (toString model)
+view: Player -> Html
+view model =
+    div [] [
+        text (String.concat [model.name, ": ", (toString model.score)])
+
+    ]
 

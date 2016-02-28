@@ -1,4 +1,4 @@
-module Board (Board, Action(..), new, view, update) where
+module Board (Board, Action(..), Event(..), new, view, update) where
 
 import Snake
 import Food exposing (Food)
@@ -13,8 +13,9 @@ import Html.Attributes
 import String
 
 
-type alias Board = {snake: Snake.Model, food: Food, size: (Int,Int), started: Bool}
+type alias Board = {snake: Snake.Model, food: Food, size: (Int,Int)}
 type Action = Step (Maybe Direction) | Start | Stop
+type Event = None | Grow | End
 
 type alias Point = (Int,Int)
 
@@ -27,63 +28,51 @@ new =
         snake = Snake.init (3,5) 3
         food = Food.init (2,7)
     in
-        Board snake food (30,30) False
+        Board snake food (30,30)
 
 view: Board -> Svg
 view game =
     let
         pixelWidth = (toString ((*) (fst game.size) Utils.width))
         pixelHeight = (toString ((*) (snd game.size) Utils.height))
-        textStyle =
-            if game.started then
-                [("display","none")]
-            else
-                [("left", "50%"), ("top", "50%"), ("position","absolute")]
     in
-        div [] [
-            div [
-                Html.Attributes.style [("border", "2px solid black"), ("display", "inline-block"), ("position", "relative")]
+        div [
+            Html.Attributes.style [("border", "2px solid black"), ("display", "inline-block")]
+        ] [
+            svg [
+                Svg.Attributes.width pixelWidth,
+                Svg.Attributes.height pixelHeight,
+                Svg.Attributes.viewBox (String.concat ["0 0 ", pixelWidth, " ", pixelHeight])
+
             ] [
-                Html.span [Html.Attributes.style textStyle] [Html.text "GAME OVER"],
-                svg [
-                    Svg.Attributes.width pixelWidth,
-                    Svg.Attributes.height pixelHeight,
-                    Svg.Attributes.viewBox (String.concat ["0 0 ", pixelWidth, " ", pixelHeight])
-
-                ] [
-                    Snake.view game.snake,
-                    rect game.food.point
-                ]
+                Snake.view game.snake,
+                rect game.food.point
             ]
-            , div [] [Html.text (toString game)]
-
         ]
 
 
-update: Action -> Board -> Board
+
+
+
+update: Action -> Board -> (Board, Event)
 update action model =
     case action of
         Step dir ->
-            if model.started then
-                let
-                    newSnake = Snake.update dir model.snake
-                    (x,y) = Snake.head newSnake
-                    (fx,fy) = model.food.point
-                in
-                    if x < 0 || y < 0 || x >= (fst model.size) || y>= (snd model.size) || Snake.collides newSnake then
-                        {model | started=False}
-                    else if x==fx && y == fy then  --food eaten
-                         let
-                            food = Food.update model.food (freeCells model)
-                        in
-                            {model| snake=Snake.grow newSnake, food = food}
-                    else
-                        {model| snake=newSnake}
-            else
-                model
-        Start ->
-            {model | started= True}
-        _ -> model
+            let
+                newSnake = Snake.update dir model.snake
+                (x,y) = Snake.head newSnake
+                (fx,fy) = model.food.point
+            in
+                if x < 0 || y < 0 || x >= (fst model.size) || y>= (snd model.size) || Snake.collides newSnake then --hit itself
+                    (model, End)
+                else if x==fx && y == fy then  --food eaten
+                     let
+                        food = Food.update model.food (freeCells model)
+                    in
+                        ({model| snake=Snake.grow newSnake, food = food}, Grow)
+                else
+                    ({model| snake=newSnake}, None)
+        _ -> (model,None)
 
 
 

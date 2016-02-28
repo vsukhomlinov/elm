@@ -13013,36 +13013,7 @@ Elm.Board.make = function (_elm) {
       _U.range(0,maxY)));
       return A2($List.filter,notMember(snakeCells),allCells);
    };
-   var update = F2(function (action,model) {
-      var _p3 = action;
-      switch (_p3.ctor)
-      {case "Step": if (model.started) {
-                 var _p4 = model.food.point;
-                 var fx = _p4._0;
-                 var fy = _p4._1;
-                 var newSnake = A2($Snake.update,_p3._0,model.snake);
-                 var _p5 = $Snake.head(newSnake);
-                 var x = _p5._0;
-                 var y = _p5._1;
-                 if (_U.cmp(x,0) < 0 || (_U.cmp(y,0) < 0 || (_U.cmp(x,
-                 $Basics.fst(model.size)) > -1 || (_U.cmp(y,
-                 $Basics.snd(model.size)) > -1 || $Snake.collides(newSnake)))))
-                 return _U.update(model,{started: false}); else if (_U.eq(x,
-                    fx) && _U.eq(y,fy)) {
-                          var food = A2($Food.update,model.food,freeCells(model));
-                          return _U.update(model,
-                          {snake: $Snake.grow(newSnake),food: food});
-                       } else return _U.update(model,{snake: newSnake});
-              } else return model;
-         case "Start": return _U.update(model,{started: true});
-         default: return model;}
-   });
    var view = function (game) {
-      var textStyle = game.started ? _U.list([{ctor: "_Tuple2"
-                                              ,_0: "display"
-                                              ,_1: "none"}]) : _U.list([{ctor: "_Tuple2",_0: "left",_1: "50%"}
-                                                                       ,{ctor: "_Tuple2",_0: "top",_1: "50%"}
-                                                                       ,{ctor: "_Tuple2",_0: "position",_1: "absolute"}]);
       var pixelHeight = $Basics.toString(A2(F2(function (x,y) {
          return x * y;
       }),
@@ -13054,44 +13025,60 @@ Elm.Board.make = function (_elm) {
       $Basics.fst(game.size),
       $Utils.width));
       return A2($Html.div,
-      _U.list([]),
-      _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                                       ,_0: "border"
-                                                       ,_1: "2px solid black"}
-                                                      ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}
-                                                      ,{ctor: "_Tuple2",_0: "position",_1: "relative"}]))]),
-              _U.list([A2($Html.span,
-                      _U.list([$Html$Attributes.style(textStyle)]),
-                      _U.list([$Html.text("GAME OVER")]))
-                      ,A2($Svg.svg,
-                      _U.list([$Svg$Attributes.width(pixelWidth)
-                              ,$Svg$Attributes.height(pixelHeight)
-                              ,$Svg$Attributes.viewBox($String.concat(_U.list(["0 0 "
-                                                                              ,pixelWidth
-                                                                              ," "
-                                                                              ,pixelHeight])))]),
-                      _U.list([$Snake.view(game.snake)
-                              ,$Utils.rect(game.food.point)]))]))
-              ,A2($Html.div,
-              _U.list([]),
-              _U.list([$Html.text($Basics.toString(game))]))]));
+      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                               ,_0: "border"
+                                               ,_1: "2px solid black"}
+                                              ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]))]),
+      _U.list([A2($Svg.svg,
+      _U.list([$Svg$Attributes.width(pixelWidth)
+              ,$Svg$Attributes.height(pixelHeight)
+              ,$Svg$Attributes.viewBox($String.concat(_U.list(["0 0 "
+                                                              ,pixelWidth
+                                                              ," "
+                                                              ,pixelHeight])))]),
+      _U.list([$Snake.view(game.snake)
+              ,$Utils.rect(game.food.point)]))]));
    };
+   var End = {ctor: "End"};
+   var Grow = {ctor: "Grow"};
+   var None = {ctor: "None"};
+   var update = F2(function (action,model) {
+      var _p3 = action;
+      if (_p3.ctor === "Step") {
+            var _p4 = model.food.point;
+            var fx = _p4._0;
+            var fy = _p4._1;
+            var newSnake = A2($Snake.update,_p3._0,model.snake);
+            var _p5 = $Snake.head(newSnake);
+            var x = _p5._0;
+            var y = _p5._1;
+            if (_U.cmp(x,0) < 0 || (_U.cmp(y,0) < 0 || (_U.cmp(x,
+            $Basics.fst(model.size)) > -1 || (_U.cmp(y,
+            $Basics.snd(model.size)) > -1 || $Snake.collides(newSnake)))))
+            return {ctor: "_Tuple2",_0: model,_1: End}; else if (_U.eq(x,
+               fx) && _U.eq(y,fy)) {
+                     var food = A2($Food.update,model.food,freeCells(model));
+                     return {ctor: "_Tuple2"
+                            ,_0: _U.update(model,{snake: $Snake.grow(newSnake),food: food})
+                            ,_1: Grow};
+                  } else return {ctor: "_Tuple2"
+                                ,_0: _U.update(model,{snake: newSnake})
+                                ,_1: None};
+         } else {
+            return {ctor: "_Tuple2",_0: model,_1: None};
+         }
+   });
    var Stop = {ctor: "Stop"};
    var mailbox = $Signal.mailbox(Stop);
    var Start = {ctor: "Start"};
    var Step = function (a) {    return {ctor: "Step",_0: a};};
-   var Board = F4(function (a,b,c,d) {
-      return {snake: a,food: b,size: c,started: d};
+   var Board = F3(function (a,b,c) {
+      return {snake: a,food: b,size: c};
    });
    var $new = function () {
       var food = $Food.init({ctor: "_Tuple2",_0: 2,_1: 7});
       var snake = A2($Snake.init,{ctor: "_Tuple2",_0: 3,_1: 5},3);
-      return A4(Board,
-      snake,
-      food,
-      {ctor: "_Tuple2",_0: 30,_1: 30},
-      false);
+      return A3(Board,snake,food,{ctor: "_Tuple2",_0: 30,_1: 30});
    }();
    return _elm.Board.values = {_op: _op
                               ,$new: $new
@@ -13100,7 +13087,61 @@ Elm.Board.make = function (_elm) {
                               ,Board: Board
                               ,Step: Step
                               ,Start: Start
-                              ,Stop: Stop};
+                              ,Stop: Stop
+                              ,None: None
+                              ,Grow: Grow
+                              ,End: End};
+};Elm.Dialog = Elm.Dialog || {};
+Elm.Dialog.make = function (_elm) {
+   "use strict";
+   _elm.Dialog = _elm.Dialog || {};
+   if (_elm.Dialog.values) return _elm.Dialog.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var view = function (dialog) {
+      return $Html.text($Basics.toString(dialog));
+   };
+   var Input = function (a) {    return {ctor: "Input",_0: a};};
+   var Close = {ctor: "Close"};
+   var mailbox = $Signal.mailbox(Close);
+   var Open = function (a) {    return {ctor: "Open",_0: a};};
+   var None = {ctor: "None"};
+   var Cancel = {ctor: "Cancel"};
+   var Name = function (a) {    return {ctor: "Name",_0: a};};
+   var update = F2(function (action,dialog) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "Open": return {ctor: "_Tuple2"
+                           ,_0: _U.update(dialog,{open: true,message: _p0._0})
+                           ,_1: None};
+         case "Close": return {ctor: "_Tuple2"
+                              ,_0: _U.update(dialog,{open: false})
+                              ,_1: Cancel};
+         default: var _p1 = _p0._0;
+           return {ctor: "_Tuple2"
+                  ,_0: _U.update(dialog,{name: _p1})
+                  ,_1: Name(_p1)};}
+   });
+   var Dialog = F3(function (a,b,c) {
+      return {name: a,open: b,message: c};
+   });
+   return _elm.Dialog.values = {_op: _op
+                               ,update: update
+                               ,view: view
+                               ,Dialog: Dialog
+                               ,Name: Name
+                               ,Cancel: Cancel
+                               ,None: None
+                               ,Open: Open
+                               ,Close: Close
+                               ,Input: Input};
 };Elm.Player = Elm.Player || {};
 Elm.Player.make = function (_elm) {
    "use strict";
@@ -13113,10 +13154,15 @@ Elm.Player.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
    var _op = {};
    var view = function (model) {
-      return $Html.text($Basics.toString(model));
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([$Html.text($String.concat(_U.list([model.name
+                                                 ,": "
+                                                 ,$Basics.toString(model.score)])))]));
    };
    var end = function (model) {    return model;};
    var score = function (model) {
@@ -13127,14 +13173,18 @@ Elm.Player.make = function (_elm) {
    };
    var mailbox = $Signal.Mailbox;
    var End = {ctor: "End"};
-   var Model = F2(function (a,b) {    return {name: a,score: b};});
-   var init = function (name) {    return A2(Model,name,0);};
+   var Player = F2(function (a,b) {
+      return {name: a,score: b};
+   });
+   var init = F2(function (name,score) {
+      return A2(Player,name,score);
+   });
    return _elm.Player.values = {_op: _op
                                ,init: init
                                ,score: score
                                ,end: end
                                ,view: view
-                               ,Model: Model};
+                               ,Player: Player};
 };Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
    "use strict";
@@ -13146,23 +13196,59 @@ Elm.Main.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $Direction = Elm.Direction.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
+   var justBoard = function (_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.board;
+      if (_p2.ctor === "Nothing") {
+            return $Board.$new;
+         } else {
+            return _p2._0;
+         }
+   };
+   var Game = F3(function (a,b,c) {
+      return {board: a,state: b,score: c};
+   });
+   var GameOver = {ctor: "GameOver"};
+   var Playing = {ctor: "Playing"};
    var update = F2(function (event,game) {
-      var _p0 = event;
-      switch (_p0.ctor)
-      {case "Tick": return A2($Board.update,$Board.Step(_p0._0),game);
-         case "Start": return A2($Board.update,$Board.Start,game);
-         case "Blank": return $Board.$new;
+      var _p3 = event;
+      switch (_p3.ctor)
+      {case "Tick": if (_U.eq(game.state,Playing)) {
+                 var _p4 = A2($Board.update,
+                 $Board.Step(_p3._0),
+                 justBoard(game));
+                 var newBoard = _p4._0;
+                 var event = _p4._1;
+                 var newGame = _U.update(game,{board: $Maybe.Just(newBoard)});
+                 var _p5 = event;
+                 switch (_p5.ctor)
+                 {case "End": return _U.update(newGame,{state: GameOver});
+                    case "Grow": return _U.update(newGame,
+                      {score: A2(F2(function (x,y) {    return x + y;}),
+                      game.score,
+                      1)});
+                    default: return newGame;}
+              } else return game;
+         case "Start": var _p6 = A2($Board.update,
+           $Board.Start,
+           $Board.$new);
+           var newBoard = _p6._0;
+           return A3(Game,$Maybe.Just(newBoard),Playing,0);
          default: return game;}
    });
+   var New = {ctor: "New"};
+   var newGame = A3(Game,$Maybe.Nothing,New,0);
    var Tick = function (a) {    return {ctor: "Tick",_0: a};};
    var Blank = {ctor: "Blank"};
    var gameMailbox = $Signal.mailbox(Blank);
@@ -13174,32 +13260,79 @@ Elm.Main.make = function (_elm) {
    A2($Signal.map,
    $Direction.fromArrowKey,
    A2($Signal.sampleOn,$Time.every(100),$Keyboard.arrows)))));
-   var GameOver = function (a) {
-      return {ctor: "GameOver",_0: a};
-   };
    var Score = function (a) {    return {ctor: "Score",_0: a};};
    var Start = function (a) {    return {ctor: "Start",_0: a};};
-   var view = function (board) {
-      return A2($Html.div,
-      _U.list([]),
-      _U.list([$Board.view(board)
-              ,A2($Html.button,
-              _U.list([A2($Html$Events.onClick,
-              gameMailbox.address,
-              Start(""))]),
-              _U.list([$Html.text("Start")]))]));
+   var view = function (game) {
+      var _p7 = game.state;
+      switch (_p7.ctor)
+      {case "Playing": return A2($Html.div,
+           _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                    ,_0: "display"
+                                                    ,_1: "inline-block"}]))]),
+           _U.list([A2($Html.div,
+                   _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                            ,_0: "text-align"
+                                                            ,_1: "right"}]))]),
+                   _U.list([$Html.text($String.concat(_U.list(["Score: "
+                                                              ,$Basics.toString(game.score)])))]))
+                   ,$Board.view(justBoard(game))]));
+         case "New": return A2($Html.div,
+           _U.list([]),
+           _U.list([A2($Html.button,
+           _U.list([A2($Html$Events.onClick,
+           gameMailbox.address,
+           Start("Aaaa"))]),
+           _U.list([$Html.text("Start")]))]));
+         default: return A2($Html.div,
+           _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                    ,_0: "display"
+                                                    ,_1: "inline-block"}]))]),
+           _U.list([A2($Html.div,
+                   _U.list([]),
+                   _U.list([A2($Html.button,
+                           _U.list([A2($Html$Events.onClick,
+                                   gameMailbox.address,
+                                   Start("Aaaa"))
+                                   ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                                    ,_0: "float"
+                                                                    ,_1: "left"}]))]),
+                           _U.list([$Html.text("Start")]))
+                           ,A2($Html.span,
+                           _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                                    ,_0: "float"
+                                                                    ,_1: "right"}]))]),
+                           _U.list([$Html.text($String.concat(_U.list(["Score: "
+                                                                      ,$Basics.toString(game.score)])))]))]))
+                   ,A2($Html.div,
+                   _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                            ,_0: "position"
+                                                            ,_1: "relative"}
+                                                           ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]))]),
+                   _U.list([$Board.view(justBoard(game))
+                           ,A2($Html.span,
+                           _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                                    ,_0: "left"
+                                                                    ,_1: "50%"}
+                                                                   ,{ctor: "_Tuple2",_0: "top",_1: "50%"}
+                                                                   ,{ctor: "_Tuple2",_0: "position",_1: "absolute"}]))]),
+                           _U.list([$Html.text("GAME OVER")]))]))]));}
    };
    var main = A2($Signal.map,
    view,
-   A3($Signal.foldp,update,$Board.$new,gameMailbox.signal));
+   A3($Signal.foldp,update,newGame,gameMailbox.signal));
    return _elm.Main.values = {_op: _op
                              ,Start: Start
                              ,Score: Score
-                             ,GameOver: GameOver
                              ,Blank: Blank
                              ,Tick: Tick
+                             ,New: New
+                             ,Playing: Playing
+                             ,GameOver: GameOver
+                             ,Game: Game
                              ,gameMailbox: gameMailbox
+                             ,newGame: newGame
                              ,main: main
                              ,update: update
-                             ,view: view};
+                             ,view: view
+                             ,justBoard: justBoard};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>
