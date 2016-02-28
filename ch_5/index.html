@@ -13100,13 +13100,29 @@ Elm.Dialog.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var view = function (dialog) {
-      return $Html.text($Basics.toString(dialog));
+      return A2($Html.div,
+      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                               ,_0: "position"
+                                               ,_1: "absolute"}
+                                              ,{ctor: "_Tuple2",_0: "left",_1: "50%"}
+                                              ,{ctor: "_Tuple2",_0: "top",_1: "40%"}
+                                              ,{ctor: "_Tuple2",_0: "border",_1: "1px solid black"}
+                                              ,{ctor: "_Tuple2",_0: "box-shadow",_1: "black 0 0 25px -3px"}
+                                              ,{ctor: "_Tuple2",_0: "width",_1: "200px"}
+                                              ,{ctor: "_Tuple2",_0: "margin-left",_1: "-100px"}
+                                              ,{ctor: "_Tuple2",_0: "text-align",_1: "center"}
+                                              ,{ctor: "_Tuple2",_0: "padding",_1: "30px"}]))]),
+      _U.list([A2($Html.h3,
+              _U.list([]),
+              _U.list([$Html.text("GAME OVER")]))
+              ,$Html.text(dialog.message)]));
    };
    var Input = function (a) {    return {ctor: "Input",_0: a};};
    var Close = {ctor: "Close"};
@@ -13132,9 +13148,11 @@ Elm.Dialog.make = function (_elm) {
    var Dialog = F3(function (a,b,c) {
       return {name: a,open: b,message: c};
    });
+   var $new = A3(Dialog,"",false,"aaa");
    return _elm.Dialog.values = {_op: _op
                                ,update: update
                                ,view: view
+                               ,$new: $new
                                ,Dialog: Dialog
                                ,Name: Name
                                ,Cancel: Cancel
@@ -13194,6 +13212,7 @@ Elm.Main.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Board = Elm.Board.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Dialog = Elm.Dialog.make(_elm),
    $Direction = Elm.Direction.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -13216,8 +13235,9 @@ Elm.Main.make = function (_elm) {
             return _p2._0;
          }
    };
-   var Game = F3(function (a,b,c) {
-      return {board: a,state: b,score: c};
+   var dialog = $Dialog.$new;
+   var Game = F4(function (a,b,c,d) {
+      return {board: a,state: b,score: c,dialog: d};
    });
    var GameOver = {ctor: "GameOver"};
    var Playing = {ctor: "Playing"};
@@ -13233,22 +13253,29 @@ Elm.Main.make = function (_elm) {
                  var newGame = _U.update(game,{board: $Maybe.Just(newBoard)});
                  var _p5 = event;
                  switch (_p5.ctor)
-                 {case "End": return _U.update(newGame,{state: GameOver});
+                 {case "End": var _p6 = A2($Dialog.update,
+                      $Dialog.Open(A2($Basics._op["++"],
+                      "Your score: ",
+                      $Basics.toString(game.score))),
+                      game.dialog);
+                      var newDialog = _p6._0;
+                      return _U.update(newGame,{state: GameOver,dialog: newDialog});
                     case "Grow": return _U.update(newGame,
                       {score: A2(F2(function (x,y) {    return x + y;}),
                       game.score,
                       1)});
                     default: return newGame;}
               } else return game;
-         case "Start": var _p6 = A2($Board.update,
+         case "Start": var _p7 = A2($Board.update,
            $Board.Start,
            $Board.$new);
-           var newBoard = _p6._0;
-           return A3(Game,$Maybe.Just(newBoard),Playing,0);
+           var newBoard = _p7._0;
+           return _U.update(game,
+           {board: $Maybe.Just(newBoard),state: Playing,score: 0});
          default: return game;}
    });
    var New = {ctor: "New"};
-   var newGame = A3(Game,$Maybe.Nothing,New,0);
+   var newGame = A4(Game,$Maybe.Nothing,New,0,dialog);
    var Tick = function (a) {    return {ctor: "Tick",_0: a};};
    var Blank = {ctor: "Blank"};
    var gameMailbox = $Signal.mailbox(Blank);
@@ -13260,11 +13287,10 @@ Elm.Main.make = function (_elm) {
    A2($Signal.map,
    $Direction.fromArrowKey,
    A2($Signal.sampleOn,$Time.every(100),$Keyboard.arrows)))));
-   var Score = function (a) {    return {ctor: "Score",_0: a};};
-   var Start = function (a) {    return {ctor: "Start",_0: a};};
+   var Start = {ctor: "Start"};
    var view = function (game) {
-      var _p7 = game.state;
-      switch (_p7.ctor)
+      var _p8 = game.state;
+      switch (_p8.ctor)
       {case "Playing": return A2($Html.div,
            _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                     ,_0: "display"
@@ -13279,10 +13305,9 @@ Elm.Main.make = function (_elm) {
          case "New": return A2($Html.div,
            _U.list([]),
            _U.list([A2($Html.button,
-           _U.list([A2($Html$Events.onClick,
-           gameMailbox.address,
-           Start("Aaaa"))]),
-           _U.list([$Html.text("Start")]))]));
+                   _U.list([A2($Html$Events.onClick,gameMailbox.address,Start)]),
+                   _U.list([$Html.text("Start")]))
+                   ,$Dialog.view(game.dialog)]));
          default: return A2($Html.div,
            _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                     ,_0: "display"
@@ -13290,9 +13315,7 @@ Elm.Main.make = function (_elm) {
            _U.list([A2($Html.div,
                    _U.list([]),
                    _U.list([A2($Html.button,
-                           _U.list([A2($Html$Events.onClick,
-                                   gameMailbox.address,
-                                   Start("Aaaa"))
+                           _U.list([A2($Html$Events.onClick,gameMailbox.address,Start)
                                    ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                                     ,_0: "float"
                                                                     ,_1: "left"}]))]),
@@ -13309,20 +13332,13 @@ Elm.Main.make = function (_elm) {
                                                             ,_1: "relative"}
                                                            ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]))]),
                    _U.list([$Board.view(justBoard(game))
-                           ,A2($Html.span,
-                           _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                                                    ,_0: "left"
-                                                                    ,_1: "50%"}
-                                                                   ,{ctor: "_Tuple2",_0: "top",_1: "50%"}
-                                                                   ,{ctor: "_Tuple2",_0: "position",_1: "absolute"}]))]),
-                           _U.list([$Html.text("GAME OVER")]))]))]));}
+                           ,$Dialog.view(game.dialog)]))]));}
    };
    var main = A2($Signal.map,
    view,
    A3($Signal.foldp,update,newGame,gameMailbox.signal));
    return _elm.Main.values = {_op: _op
                              ,Start: Start
-                             ,Score: Score
                              ,Blank: Blank
                              ,Tick: Tick
                              ,New: New
@@ -13330,6 +13346,7 @@ Elm.Main.make = function (_elm) {
                              ,GameOver: GameOver
                              ,Game: Game
                              ,gameMailbox: gameMailbox
+                             ,dialog: dialog
                              ,newGame: newGame
                              ,main: main
                              ,update: update

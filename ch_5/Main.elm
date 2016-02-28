@@ -19,7 +19,7 @@ import Player
 import Board exposing (Board, Action, Event)
 import Player exposing (Player)
 import Food
-import Dialog exposing (Dialog, view, update, new)
+import Dialog exposing (Dialog, Action, view, update, new)
 
 type Event = Start | Blank | Tick (Maybe Direction)
 type State = New | Playing | GameOver
@@ -28,8 +28,8 @@ type alias Game = {board:Maybe Board, state: State, score:Int, dialog:Dialog}
 
 gameMailbox = Signal.mailbox Blank
 
-newGame = Game Nothing New 0
 dialog = Dialog.new
+newGame = Game Nothing New 0 dialog
 main: Signal Html
 main =
     Signal.map view (Signal.foldp update newGame gameMailbox.signal)
@@ -45,7 +45,10 @@ update event game =
                 in
                     case event of
                         Board.End ->
-                            {newGame| state=GameOver}
+                            let
+                                (newDialog, _) = Dialog.update (Dialog.Open ("Your score: " ++ (toString game.score))) game.dialog
+                            in
+                                {newGame| state=GameOver, dialog=newDialog}
                         Board.Grow ->
                             {newGame| score=(+) game.score 1}
                         Board.None -> newGame
@@ -56,7 +59,7 @@ update event game =
             let
                 (newBoard, _) = Board.update (Board.Start) Board.new
             in
-                Game (Just newBoard) Playing 0
+                {game | board = Just newBoard, state=Playing, score=0}
 
         _ -> game
 
@@ -73,21 +76,20 @@ view game =
             ]
         New ->
             div [] [
-                button [ onClick gameMailbox.address (Start "Aaaa")] [text "Start"]
+                button [ onClick gameMailbox.address Start] [text "Start"]
+                ,Dialog.view game.dialog
             ]
         GameOver ->
             div [ style [("display", "inline-block")]] [
                 div [] [
-                    button [ onClick gameMailbox.address (Start "Aaaa"),  style [("float", "left")] ] [text "Start"]
+                    button [ onClick gameMailbox.address Start,  style [("float", "left")] ] [text "Start"]
                     ,span [ style [("float", "right")]] [
                         text (String.concat ["Score: ", toString game.score])
                     ]
                 ]
                 , div [style [("position", "relative"), ("display", "inline-block")]] [
                     Board.view (justBoard game)
-                    , Html.span [style [("left", "50%"), ("top", "50%"), ("position","absolute")]] [
-                        Html.text "GAME OVER"
-                    ]
+                    ,Dialog.view game.dialog
                 ]
             ]
 
