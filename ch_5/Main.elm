@@ -19,16 +19,17 @@ import Player
 import Board exposing (Board, Action, Event)
 import Player exposing (Player)
 import Food
-import Dialog
+import Dialog exposing (Dialog, view, update, new)
 
 type Event = Start | Blank | Tick (Maybe Direction)
 type State = New | Playing | GameOver
 
-type alias Game = {board:Maybe Board, state: State, score:Int}
+type alias Game = {board:Maybe Board, state: State, score:Int, dialog:Dialog}
 
 gameMailbox = Signal.mailbox Blank
 
 newGame = Game Nothing New 0
+dialog = Dialog.new
 main: Signal Html
 main =
     Signal.map view (Signal.foldp update newGame gameMailbox.signal)
