@@ -21,7 +21,7 @@ import Player exposing (Player)
 import Food
 import Dialog
 
-type Event = Start String | Score String | Blank | Tick (Maybe Direction)
+type Event = Start | Blank | Tick (Maybe Direction)
 type State = New | Playing | GameOver
 
 type alias Game = {board:Maybe Board, state: State, score:Int}
@@ -51,7 +51,7 @@ update event game =
             else
                 game
 
-        Start playerName ->
+        Start ->
             let
                 (newBoard, _) = Board.update (Board.Start) Board.new
             in
