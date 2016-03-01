@@ -19,17 +19,17 @@ import Player
 import Board exposing (Board, Action, Event)
 import Player exposing (Player)
 import Food
-import Dialog exposing (Dialog, Action, view, update, new)
+import Dialog exposing (Dialog, Action, view, update, new, Context)
 
-type Event = Start | Blank | Tick (Maybe Direction)
-type State = New | Playing | GameOver
+type Event = Start | Blank | Tick (Maybe Direction) | Save Player
+type State = New | Playing | GameOver | Chart
 
-type alias Game = {board:Maybe Board, state: State, score:Int, dialog:Dialog}
+type alias Game = {board:Maybe Board, state: State, score:Int, dialog:Dialog, players:List Player}
 
 gameMailbox = Signal.mailbox Blank
 
 dialog = Dialog.new
-newGame = Game Nothing New 0 dialog
+newGame = Game Nothing New 0 dialog []
 main: Signal Html
 main =
     Signal.map view (Signal.foldp update newGame gameMailbox.signal)
@@ -46,7 +46,7 @@ update event game =
                     case event of
                         Board.End ->
                             let
-                                (newDialog, _) = Dialog.update (Dialog.Open ("Your score: " ++ (toString game.score))) game.dialog
+                                newDialog = Dialog.update (Dialog.Open game.score) game.dialog
                             in
                                 {newGame| state=GameOver, dialog=newDialog}
                         Board.Grow ->
@@ -61,7 +61,9 @@ update event game =
             in
                 {game | board = Just newBoard, state=Playing, score=0}
 
-        _ -> game
+        Blank -> Game Nothing New 0 dialog []
+        Save person -> Game Nothing Chart 0 dialog [Player "aaa" 300, Player "bbb" 100]
+        --_ -> game
 
 
 view: Game -> Html
@@ -76,22 +78,36 @@ view game =
             ]
         New ->
             div [] [
-                button [ onClick gameMailbox.address Start] [text "Start"]
-                ,Dialog.view game.dialog
+                button [ onClick gameMailbox.address Start] [text "Start"],
+                text (toString game)
             ]
         GameOver ->
-            div [ style [("display", "inline-block")]] [
-                div [] [
-                    button [ onClick gameMailbox.address Start,  style [("float", "left")] ] [text "Start"]
-                    ,span [ style [("float", "right")]] [
-                        text (String.concat ["Score: ", toString game.score])
+            let
+                forwardPlayer (Dialog.Save p) =
+                    case p of
+                        Nothing -> Blank
+                        Just player -> Save player
+
+                context = Dialog.Context (Signal.forwardTo gameMailbox.address forwardPlayer)
+            in
+                div [ style [("display", "inline-block")]] [
+                    div [] [
+                        button [ onClick gameMailbox.address Start,  style [("float", "left")] ] [text "Start"]
+                        ,span [ style [("float", "right")]] [
+                            text (String.concat ["Score: ", toString game.score])
+                        ]
+                    ]
+                    , div [style [("position", "relative"), ("display", "inline-block")]] [
+                        Board.view (justBoard game)
+                        ,Dialog.view context game.dialog
                     ]
                 ]
-                , div [style [("position", "relative"), ("display", "inline-block")]] [
-                    Board.view (justBoard game)
-                    ,Dialog.view game.dialog
-                ]
+        Chart ->
+            div [] [
+                Html.ul [] (List.map (\ p -> Html.li [] [Player.view p]) game.players)
+                ,button [ onClick gameMailbox.address Start] [text "Start new game"]
             ]
+
 
 
 justBoard: Game -> Board

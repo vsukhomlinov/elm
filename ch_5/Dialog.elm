@@ -1,30 +1,34 @@
-module Dialog(Dialog, Event(..), Action(..), update, view, new) where
+module Dialog(Dialog, SavePlayer(..), Action(..), update, view, new, Context) where
 
-import Html exposing (Html, text, div, h3)
+import Html exposing (Html, text, div, h3, input, button, form)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Signal
+import Player exposing (Player)
 import Graphics.Element exposing (Element, show, container, middle)
 
-type alias Dialog = {name:String, open:Bool, message:String}
+type alias Dialog = {name:String, open:Bool, score:Int}
+type alias Context = {gameOver: Signal.Address SavePlayer}
 
-type Event = Name String | Cancel | None
-type Action = Open String | Close | Input String
+type SavePlayer = Save (Maybe Player)
+type Action = Open Int | Close | Input String | Submit
 
 new: Dialog
-new = Dialog "" False "aaa"
+new = Dialog "" False 0
 
 mailbox: Signal.Mailbox Action
 mailbox = Signal.mailbox Close
 
-update: Action -> Dialog -> (Dialog, Event)
+update: Action -> Dialog -> Dialog
 update action dialog=
     case action of
-        Open message -> ({dialog | open=True, message=message}, None)
-        Close -> ({dialog | open=False}, Cancel)
-        Input name -> ({dialog | name=name}, Name name)
+        Open score -> {dialog | open=True, score=score}
+        Close -> {dialog | open=False, score=0}
+        Input name -> {dialog | name=name}
+        Submit -> {dialog | open=False}
 
-view: Dialog -> Html
-view dialog=
+view: Context -> Dialog -> Html
+view context dialog=
     div [style [
             ("position", "absolute"),
             ("left", "50%"),
@@ -36,5 +40,17 @@ view dialog=
             ("text-align", "center"),
             ("padding", "30px")]] [
         h3 [] [text "GAME OVER"]
-        ,text dialog.message
+        ,text ("Your score: "++ (toString dialog.score))
+        ,div [] [
+            input [
+                type' "text"
+                 ,placeholder "Enter your name"
+                 ,on "input" targetValue (\ name -> Signal.message mailbox.address (Input name))
+            ] []
+            , button [onClick context.gameOver (Save (Just (Player dialog.name dialog.score)))] [text "Save"]
+            , button [
+                type' "reset"
+                ,onClick context.gameOver (Save Nothing)
+            ] [text "Cancel"]
+        ]
     ]
