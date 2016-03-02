@@ -1,4 +1,4 @@
-module Player(Player, init, score, end, view) where
+module Player(Player, init, score, end, view, add) where
 
 import Html exposing (Html, text, div)
 import String
@@ -24,4 +24,11 @@ view model =
         text (String.concat [model.name, ": ", (toString model.score)])
 
     ]
+
+add: List Player -> Player -> List Player
+add players {name,score} =
+    case List.partition (\ player -> player.name == name) players of
+        ([], pls) -> (Player name score) :: pls
+        ([p], pls) -> if (p.score > score) then p::pls else (Player name score) :: pls
+        (_, _) -> players
 

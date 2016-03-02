@@ -21,7 +21,7 @@ import Player exposing (Player)
 import Food
 import Dialog exposing (Dialog, Action, view, update, new, Context)
 
-type Event = Start | Blank | Tick (Maybe Direction) | Save Player
+type Event = Start | Blank | Tick (Maybe Direction) | Highscore (List Player) | Dialog Dialog.Action
 type State = New | Playing | GameOver | Chart
 
 type alias Game = {board:Maybe Board, state: State, score:Int, dialog:Dialog, players:List Player}
@@ -29,7 +29,7 @@ type alias Game = {board:Maybe Board, state: State, score:Int, dialog:Dialog, pl
 gameMailbox = Signal.mailbox Blank
 
 dialog = Dialog.new
-newGame = Game Nothing New 0 dialog []
+newGame = Game Nothing New 0 dialog  getSavedPlayers
 main: Signal Html
 main =
     Signal.map view (Signal.foldp update newGame gameMailbox.signal)
@@ -61,9 +61,10 @@ update event game =
             in
                 {game | board = Just newBoard, state=Playing, score=0}
 
-        Blank -> Game Nothing New 0 dialog []
-        Save person -> Game Nothing Chart 0 dialog [Player "aaa" 300, Player "bbb" 100]
-        --_ -> game
+        Blank -> Game Nothing New 0 dialog game.players
+        Highscore players ->
+            Game Nothing Chart 0 dialog players
+        Dialog action -> {game| dialog=(Dialog.update action game.dialog)}
 
 
 view: Game -> Html
@@ -78,17 +79,16 @@ view game =
             ]
         New ->
             div [] [
-                button [ onClick gameMailbox.address Start] [text "Start"],
-                text (toString game)
+                button [ onClick gameMailbox.address Start] [text "Start"]
             ]
         GameOver ->
             let
                 forwardPlayer (Dialog.Save p) =
                     case p of
-                        Nothing -> Blank
-                        Just player -> Save player
+                        Nothing -> Highscore game.players
+                        Just player -> Highscore (Player.add game.players player)
 
-                context = Dialog.Context (Signal.forwardTo gameMailbox.address forwardPlayer)
+                context = Dialog.Context (Signal.forwardTo gameMailbox.address forwardPlayer) (Signal.forwardTo gameMailbox.address Dialog)
             in
                 div [ style [("display", "inline-block")]] [
                     div [] [
@@ -103,10 +103,15 @@ view game =
                     ]
                 ]
         Chart ->
-            div [] [
-                Html.ul [] (List.map (\ p -> Html.li [] [Player.view p]) game.players)
-                ,button [ onClick gameMailbox.address Start] [text "Start new game"]
-            ]
+            let
+                sorted = List.reverse (List.sortBy .score game.players)
+            in
+
+                div [] [
+                    Html.h3 [] [text "High Score"]
+                    ,Html.ol [] (List.map (\ p -> Html.li [] [Player.view p]) sorted)
+                    ,button [ onClick gameMailbox.address Start] [text "Start new game"]
+                ]
 
 
 
@@ -123,6 +128,17 @@ port keyboard =
         |> Signal.map Tick
         |> Signal.map (Signal.send gameMailbox.address)
 
+port savePlayers: Signal (List Player)
+port savePlayers =
+    Signal.filterMap eventToPlayer [] gameMailbox.signal
+
+port getSavedPlayers: List Player
+
+eventToPlayer: Event -> Maybe (List Player)
+eventToPlayer event =
+    case event of
+        Highscore players -> Just players
+        _ -> Nothing
 
 
 

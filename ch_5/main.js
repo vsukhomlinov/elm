@@ -13180,11 +13180,35 @@ Elm.Player.make = function (_elm) {
    var init = F2(function (name,score) {
       return A2(Player,name,score);
    });
+   var add = F2(function (players,_p0) {
+      var _p1 = _p0;
+      var _p6 = _p1.score;
+      var _p5 = _p1.name;
+      var _p2 = A2($List.partition,
+      function (player) {
+         return _U.eq(player.name,_p5);
+      },
+      players);
+      if (_p2._0.ctor === "[]") {
+            return A2($List._op["::"],A2(Player,_p5,_p6),_p2._1);
+         } else {
+            if (_p2._0._1.ctor === "[]") {
+                  var _p4 = _p2._1;
+                  var _p3 = _p2._0._0;
+                  return _U.cmp(_p3.score,_p6) > 0 ? A2($List._op["::"],
+                  _p3,
+                  _p4) : A2($List._op["::"],A2(Player,_p5,_p6),_p4);
+               } else {
+                  return players;
+               }
+         }
+   });
    return _elm.Player.values = {_op: _op
                                ,init: init
                                ,score: score
                                ,end: end
                                ,view: view
+                               ,add: add
                                ,Player: Player};
 };
 Elm.Dialog = Elm.Dialog || {};
@@ -13221,23 +13245,17 @@ Elm.Dialog.make = function (_elm) {
    var Save = function (a) {    return {ctor: "Save",_0: a};};
    var view = F2(function (context,dialog) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "position"
-                                               ,_1: "absolute"}
-                                              ,{ctor: "_Tuple2",_0: "left",_1: "50%"}
-                                              ,{ctor: "_Tuple2",_0: "top",_1: "40%"}
-                                              ,{ctor: "_Tuple2",_0: "border",_1: "1px solid black"}
-                                              ,{ctor: "_Tuple2",_0: "box-shadow",_1: "black 0 0 25px -3px"}
-                                              ,{ctor: "_Tuple2",_0: "width",_1: "200px"}
-                                              ,{ctor: "_Tuple2",_0: "margin-left",_1: "-100px"}
-                                              ,{ctor: "_Tuple2",_0: "text-align",_1: "center"}
-                                              ,{ctor: "_Tuple2",_0: "padding",_1: "30px"}]))]),
-      _U.list([A2($Html.h3,
+      _U.list([$Html$Attributes.$class("dialogPosition")]),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("dialog")]),
+      _U.list([A2($Html.h2,
               _U.list([]),
               _U.list([$Html.text("GAME OVER")]))
-              ,$Html.text(A2($Basics._op["++"],
+              ,A2($Html.h3,
+              _U.list([]),
+              _U.list([$Html.text(A2($Basics._op["++"],
               "Your score: ",
-              $Basics.toString(dialog.score)))
+              $Basics.toString(dialog.score)))]))
               ,A2($Html.div,
               _U.list([]),
               _U.list([A2($Html.input,
@@ -13247,7 +13265,7 @@ Elm.Dialog.make = function (_elm) {
                               "input",
                               $Html$Events.targetValue,
                               function (name) {
-                                 return A2($Signal.message,mailbox.address,Input(name));
+                                 return A2($Signal.message,context.step,Input(name));
                               })]),
                       _U.list([]))
                       ,A2($Html.button,
@@ -13262,13 +13280,15 @@ Elm.Dialog.make = function (_elm) {
                               ,A2($Html$Events.onClick,
                               context.gameOver,
                               Save($Maybe.Nothing))]),
-                      _U.list([$Html.text("Cancel")]))]))]));
+                      _U.list([$Html.text("Cancel")]))]))]))]));
    });
-   var Context = function (a) {    return {gameOver: a};};
+   var Context = F2(function (a,b) {
+      return {gameOver: a,step: b};
+   });
    var Dialog = F3(function (a,b,c) {
       return {name: a,open: b,score: c};
    });
-   var $new = A3(Dialog,"",false,0);
+   var $new = A3(Dialog,"Guest",false,0);
    return _elm.Dialog.values = {_op: _op
                                ,update: update
                                ,view: view
@@ -13305,13 +13325,33 @@ Elm.Main.make = function (_elm) {
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var justBoard = function (_p0) {
-      var _p1 = _p0;
-      var _p2 = _p1.board;
-      if (_p2.ctor === "Nothing") {
+   var eventToPlayer = function (event) {
+      var _p0 = event;
+      if (_p0.ctor === "Highscore") {
+            return $Maybe.Just(_p0._0);
+         } else {
+            return $Maybe.Nothing;
+         }
+   };
+   var getSavedPlayers = Elm.Native.Port.make(_elm).inbound("getSavedPlayers",
+   "List Player.Player",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
+         return typeof v === "object" && "name" in v && "score" in v ? {_: {}
+                                                                       ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                       v.name)
+                                                                       ,score: typeof v.score === "number" && isFinite(v.score) && Math.floor(v.score) === v.score ? v.score : _U.badPort("an integer",
+                                                                       v.score)} : _U.badPort("an object with fields `name`, `score`",
+         v);
+      })) : _U.badPort("an array",v);
+   });
+   var justBoard = function (_p1) {
+      var _p2 = _p1;
+      var _p3 = _p2.board;
+      if (_p3.ctor === "Nothing") {
             return $Board.$new;
          } else {
-            return _p2._0;
+            return _p3._0;
          }
    };
    var dialog = $Dialog.$new;
@@ -13322,19 +13362,24 @@ Elm.Main.make = function (_elm) {
    var GameOver = {ctor: "GameOver"};
    var Playing = {ctor: "Playing"};
    var New = {ctor: "New"};
-   var newGame = A5(Game,$Maybe.Nothing,New,0,dialog,_U.list([]));
+   var newGame = A5(Game,
+   $Maybe.Nothing,
+   New,
+   0,
+   dialog,
+   getSavedPlayers);
    var update = F2(function (event,game) {
-      var _p3 = event;
-      switch (_p3.ctor)
+      var _p4 = event;
+      switch (_p4.ctor)
       {case "Tick": if (_U.eq(game.state,Playing)) {
-                 var _p4 = A2($Board.update,
-                 $Board.Step(_p3._0),
+                 var _p5 = A2($Board.update,
+                 $Board.Step(_p4._0),
                  justBoard(game));
-                 var newBoard = _p4._0;
-                 var event = _p4._1;
+                 var newBoard = _p5._0;
+                 var event = _p5._1;
                  var newGame = _U.update(game,{board: $Maybe.Just(newBoard)});
-                 var _p5 = event;
-                 switch (_p5.ctor)
+                 var _p6 = event;
+                 switch (_p6.ctor)
                  {case "End": var newDialog = A2($Dialog.update,
                       $Dialog.Open(game.score),
                       game.dialog);
@@ -13345,10 +13390,10 @@ Elm.Main.make = function (_elm) {
                       1)});
                     default: return newGame;}
               } else return game;
-         case "Start": var _p6 = A2($Board.update,
+         case "Start": var _p7 = A2($Board.update,
            $Board.Start,
            $Board.$new);
-           var newBoard = _p6._0;
+           var newBoard = _p7._0;
            return _U.update(game,
            {board: $Maybe.Just(newBoard),state: Playing,score: 0});
          case "Blank": return A5(Game,
@@ -13356,16 +13401,20 @@ Elm.Main.make = function (_elm) {
            New,
            0,
            dialog,
-           _U.list([]));
-         default: return A5(Game,
+           game.players);
+         case "Highscore": return A5(Game,
            $Maybe.Nothing,
            Chart,
            0,
            dialog,
-           _U.list([A2($Player.Player,"aaa",300)
-                   ,A2($Player.Player,"bbb",100)]));}
+           _p4._0);
+         default: return _U.update(game,
+           {dialog: A2($Dialog.update,_p4._0,game.dialog)});}
    });
-   var Save = function (a) {    return {ctor: "Save",_0: a};};
+   var Dialog = function (a) {    return {ctor: "Dialog",_0: a};};
+   var Highscore = function (a) {
+      return {ctor: "Highscore",_0: a};
+   };
    var Tick = function (a) {    return {ctor: "Tick",_0: a};};
    var Blank = {ctor: "Blank"};
    var gameMailbox = $Signal.mailbox(Blank);
@@ -13377,10 +13426,20 @@ Elm.Main.make = function (_elm) {
    A2($Signal.map,
    $Direction.fromArrowKey,
    A2($Signal.sampleOn,$Time.every(100),$Keyboard.arrows)))));
+   var savePlayers = Elm.Native.Port.make(_elm).outboundSignal("savePlayers",
+   function (v) {
+      return Elm.Native.List.make(_elm).toArray(v).map(function (v) {
+         return {name: v.name,score: v.score};
+      });
+   },
+   A3($Signal.filterMap,
+   eventToPlayer,
+   _U.list([]),
+   gameMailbox.signal));
    var Start = {ctor: "Start"};
    var view = function (game) {
-      var _p7 = game.state;
-      switch (_p7.ctor)
+      var _p8 = game.state;
+      switch (_p8.ctor)
       {case "Playing": return A2($Html.div,
            _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                     ,_0: "display"
@@ -13395,21 +13454,20 @@ Elm.Main.make = function (_elm) {
          case "New": return A2($Html.div,
            _U.list([]),
            _U.list([A2($Html.button,
-                   _U.list([A2($Html$Events.onClick,gameMailbox.address,Start)]),
-                   _U.list([$Html.text("Start")]))
-                   ,$Html.text($Basics.toString(game))]));
-         case "GameOver": var forwardPlayer = function (_p8) {
-              var _p9 = _p8;
-              var _p10 = _p9._0;
-              if (_p10.ctor === "Nothing") {
-                    return Blank;
+           _U.list([A2($Html$Events.onClick,gameMailbox.address,Start)]),
+           _U.list([$Html.text("Start")]))]));
+         case "GameOver": var forwardPlayer = function (_p9) {
+              var _p10 = _p9;
+              var _p11 = _p10._0;
+              if (_p11.ctor === "Nothing") {
+                    return Highscore(game.players);
                  } else {
-                    return Save(_p10._0);
+                    return Highscore(A2($Player.add,game.players,_p11._0));
                  }
            };
-           var context = $Dialog.Context(A2($Signal.forwardTo,
-           gameMailbox.address,
-           forwardPlayer));
+           var context = A2($Dialog.Context,
+           A2($Signal.forwardTo,gameMailbox.address,forwardPlayer),
+           A2($Signal.forwardTo,gameMailbox.address,Dialog));
            return A2($Html.div,
            _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                     ,_0: "display"
@@ -13435,15 +13493,23 @@ Elm.Main.make = function (_elm) {
                                                            ,{ctor: "_Tuple2",_0: "display",_1: "inline-block"}]))]),
                    _U.list([$Board.view(justBoard(game))
                            ,A2($Dialog.view,context,game.dialog)]))]));
-         default: return A2($Html.div,
+         default: var sorted = $List.reverse(A2($List.sortBy,
+           function (_) {
+              return _.score;
+           },
+           game.players));
+           return A2($Html.div,
            _U.list([]),
-           _U.list([A2($Html.ul,
+           _U.list([A2($Html.h3,
+                   _U.list([]),
+                   _U.list([$Html.text("High Score")]))
+                   ,A2($Html.ol,
                    _U.list([]),
                    A2($List.map,
                    function (p) {
                       return A2($Html.li,_U.list([]),_U.list([$Player.view(p)]));
                    },
-                   game.players))
+                   sorted))
                    ,A2($Html.button,
                    _U.list([A2($Html$Events.onClick,gameMailbox.address,Start)]),
                    _U.list([$Html.text("Start new game")]))]));}
@@ -13455,7 +13521,8 @@ Elm.Main.make = function (_elm) {
                              ,Start: Start
                              ,Blank: Blank
                              ,Tick: Tick
-                             ,Save: Save
+                             ,Highscore: Highscore
+                             ,Dialog: Dialog
                              ,New: New
                              ,Playing: Playing
                              ,GameOver: GameOver
@@ -13467,5 +13534,6 @@ Elm.Main.make = function (_elm) {
                              ,main: main
                              ,update: update
                              ,view: view
-                             ,justBoard: justBoard};
+                             ,justBoard: justBoard
+                             ,eventToPlayer: eventToPlayer};
 };

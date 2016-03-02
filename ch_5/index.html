@@ -1,12 +1,55 @@
 <html>
-    <head>
-        <script src="main.js"></script>
-    </head>
+<head>
+    <script src="main.js"></script>
+    <style>
+        button {
+            font-size: 120%;
+            color: white;
+            background-color: darkgreen;
+            padding: 5px 10px;
+            border: 1px solid darkgreen;
+            margin: 10px;
+        }
 
-    <body>
-    <script>
-        Elm.fullscreen(Elm.Main);
+        input {
+            font-size: 120%;
+            border: 1px solid darkgreen;
+            padding: 5px 10px;
+            display: block;
+        }
 
-    </script>
-    </body>
+        .dialogPosition {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%,-50%);
+
+        }
+        .dialog {
+            border: 1px solid black;
+            box-shadow: black 0 0 25px -3px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 30px;
+            display:table-cell;
+            vertical-align: middle;
+            background: #eeeeee;
+        }
+
+    </style>
+</head>
+
+<body>
+<script>
+    var players = [];
+    try {
+        players = JSON.parse(localStorage.getItem('snake_highscore'));
+    } catch (e) {
+    }
+    var app = Elm.fullscreen(Elm.Main, {getSavedPlayers: players});
+    app.ports.savePlayers.subscribe(function (players) {
+        localStorage.setItem('snake_highscore', JSON.stringify(players))
+    })
+</script>
+</body>
 </html>
